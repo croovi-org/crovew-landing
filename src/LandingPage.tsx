@@ -106,6 +106,10 @@ const PREVIEW_BARS = [40, 20, 50, 80, 45, 60, 30, 90, 70, 85, 40, 65, 50].map(
 );
 
 const HERO_SHELL = "max-w-[1360px]";
+const EMAIL_PATTERN =
+  /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/i;
+const WAITLIST_ENDPOINT =
+  import.meta.env.VITE_WAITLIST_ENDPOINT || "/api/waitlist";
 
 function scrollToSection(id: string) {
   const element = document.getElementById(id);
@@ -1123,6 +1127,86 @@ function RoadmapSection() {
 }
 
 function CTASection() {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<{
+    tone: "success" | "duplicate" | "error";
+    message: string;
+  } | null>(null);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (
+      !normalizedEmail ||
+      normalizedEmail.length > 254 ||
+      !EMAIL_PATTERN.test(normalizedEmail)
+    ) {
+      setFeedback({
+        tone: "error",
+        message: "Enter a valid email address.",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setFeedback(null);
+
+    try {
+      const response = await fetch(WAITLIST_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: normalizedEmail,
+          product: "CroVew",
+        }),
+      });
+
+      const data = (await response.json().catch(() => null)) as
+        | {
+            error?: string;
+            message?: string;
+          }
+        | null;
+
+      if (response.ok) {
+        setEmail("");
+        setFeedback({
+          tone: "success",
+          message:
+            data?.message ??
+            "Congratulations! You'll be notified when CroVew goes live.",
+        });
+        return;
+      }
+
+      if (response.status === 409) {
+        setFeedback({
+          tone: "duplicate",
+          message:
+            data?.error ?? "You're already registered on the waitlist.",
+        });
+        return;
+      }
+
+      setFeedback({
+        tone: "error",
+        message: data?.error ?? "Unable to join the waitlist right now.",
+      });
+    } catch {
+      setFeedback({
+        tone: "error",
+        message: "Unable to join the waitlist right now.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="waitlist" className="py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-[#23C9B9]/5 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_20%,transparent_100%)]" />
@@ -1150,27 +1234,63 @@ function CTASection() {
           Join the early-access list for the MVP: live users, event stream,
           geo presence, retention cohorts, and a tiny SDK built for founders.
         </p>
-        <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <a
-            href="https://github.com/Ashish-khanagwal/crovew"
-            target="_blank"
-            rel="noreferrer"
-            className="group relative overflow-hidden rounded-full bg-white px-8 py-4 text-base font-semibold text-black transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]"
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-5xl"
+        >
+          <div className="relative overflow-hidden rounded-[34px] border border-white/12 bg-white/[0.035] p-2 shadow-[0_28px_120px_rgba(0,0,0,0.42),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(35,201,185,0.12),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(122,245,232,0.08),transparent_25%)]" />
+            <div className="relative flex flex-col gap-3 md:flex-row md:items-center">
+              <label htmlFor="waitlist-email" className="sr-only">
+                Enter your work email
+              </label>
+              <input
+                id="waitlist-email"
+                type="email"
+                autoComplete="email"
+                inputMode="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="Enter your work email"
+                className="h-[72px] w-full rounded-[26px] border border-white/0 bg-transparent px-6 text-lg text-white outline-none placeholder:text-[#8A959A] md:pr-[220px]"
+                aria-describedby="waitlist-helper waitlist-feedback"
+                aria-invalid={feedback?.tone === "error" ? "true" : "false"}
+              />
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex h-[64px] items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,#23C9B9_0%,#1BA99C_42%,#12857D_100%)] px-7 text-lg font-semibold text-[#04110F] transition-all hover:scale-[1.01] hover:shadow-[0_18px_46px_rgba(35,201,185,0.32)] disabled:cursor-not-allowed disabled:opacity-70 md:absolute md:right-2 md:top-1/2 md:w-[210px] md:-translate-y-1/2"
+              >
+                {isSubmitting ? "Joining..." : "Join Waitlist"}
+                <span className="ml-2 text-2xl leading-none" aria-hidden="true">
+                  →
+                </span>
+              </button>
+            </div>
+          </div>
+          <p
+            id="waitlist-helper"
+            className="mt-5 text-base text-[#6F8085]"
           >
-            <span className="relative z-10 inline-flex items-center gap-2">
-              View Project
-              <ArrowUpRight className="h-4 w-4" />
-            </span>
-            <div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-[#23C9B9]/20 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite]" />
-          </a>
-          <a
-            href="#docs"
-            onClick={(event) => handleSectionLinkClick("docs", event)}
-            className="rounded-full border border-white/10 bg-white/5 px-8 py-4 text-base font-medium text-white transition-all hover:bg-white/10"
-          >
-            Read The MVP
-          </a>
-        </div>
+            Get early access before public signups open. Company and
+            professional emails are welcome.
+          </p>
+          {feedback ? (
+            <p
+              id="waitlist-feedback"
+              role="status"
+              className={`mt-4 text-xl ${
+                feedback.tone === "success"
+                  ? "text-[#2FE282]"
+                  : feedback.tone === "duplicate"
+                    ? "text-[#FF9B9B]"
+                    : "text-[#FFB86E]"
+              }`}
+            >
+              {feedback.message}
+            </p>
+          ) : null}
+        </form>
       </div>
     </section>
   );
