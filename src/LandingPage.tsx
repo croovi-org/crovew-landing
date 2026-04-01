@@ -26,6 +26,7 @@ import {
 import crovewLogo from "@/assets/crovew-logo-cropped.png";
 import { AnimatedWorldMap } from "./WorldMap";
 import { GlobeScene, isWebGLAvailable } from "./GlobeScene";
+import { EyeCursor } from "./components/EyeCursor";
 
 const COLORS = {
   bg: "#05070A",
@@ -134,6 +135,7 @@ export function LandingPage() {
         color: COLORS.text,
       }}
     >
+      <EyeCursor />
       <NoiseOverlay />
 
       <AnimatePresence>
