@@ -13,4 +13,10 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react-simple-maps", "prop-types"],
   },
+  build: {
+    commonjsOptions: {
+      include: [/react-simple-maps/, /prop-types/, /node_modules/],
+      transformMixedEsModules: true,
+    },
+  },
 });
