@@ -6,7 +6,7 @@ const EYE_SIZE = 32;
 const HALF_EYE = EYE_SIZE / 2;
 const TRAIL_DISTANCE = 18;
 const IDLE_DELAY_MS = 800;
-const ORBIT_RADIUS = 22;
+const ORBIT_RADIUS = 45;
 const ORBIT_DURATION_MS = 3000;
 
 type Point = {
@@ -157,7 +157,10 @@ export function EyeCursor() {
       } else {
         const effectiveDirection = {
           x: directionRef.current.x,
-          y: directionRef.current.y !== 0 ? directionRef.current.y : scrollDirectionRef.current,
+          y:
+            directionRef.current.y !== 0
+              ? directionRef.current.y
+              : scrollDirectionRef.current,
         };
         const offset = getTrailingOffset(effectiveDirection);
         targetX += offset.x;
@@ -196,7 +199,11 @@ export function EyeCursor() {
         animate={isIdle && !reducedMotion ? { rotate: 360 } : { rotate: 0 }}
         transition={
           isIdle && !reducedMotion
-            ? { duration: ORBIT_DURATION_MS / 1000, ease: "linear", repeat: Infinity }
+            ? {
+                duration: ORBIT_DURATION_MS / 1000,
+                ease: "linear",
+                repeat: Infinity,
+              }
             : { duration: 0.4, ease: "easeOut" }
         }
         style={{
