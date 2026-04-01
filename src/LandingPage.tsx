@@ -5,12 +5,7 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  AnimatePresence,
-} from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Activity,
   MousePointerClick,
@@ -21,7 +16,12 @@ import {
   ChevronRight,
   Zap,
   Play,
-  CheckCircle2,
+  Clock3,
+  Shield,
+  BarChart3,
+  Users,
+  KeyRound,
+  ArrowUpRight,
 } from "lucide-react";
 import crovewLogo from "@/assets/crovew-logo-cropped.png";
 import { AnimatedWorldMap } from "./WorldMap";
@@ -88,6 +88,27 @@ const MOCK_EVENTS = [
   },
 ];
 
+const NAV_ITEMS = [
+  { label: "Product", href: "#product" },
+  { label: "Docs", href: "#docs" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "Roadmap", href: "#roadmap" },
+];
+
+const PREVIEW_BARS = [40, 20, 50, 80, 45, 60, 30, 90, 70, 85, 40, 65, 50].map(
+  (value, index) => ({
+    value,
+    peak: Math.max(12, Math.min(96, value + ((index % 5) - 2) * 5)),
+    duration: 2.4 + (index % 4) * 0.35,
+  }),
+);
+
+function scrollToSection(id: string) {
+  const element = document.getElementById(id);
+  if (!element) return;
+  element.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 export function LandingPage() {
   const [showIntro, setShowIntro] = useState(true);
   // NavBar is hidden while the globe is showing; it slides in when the map phase begins
@@ -142,7 +163,11 @@ export function LandingPage() {
         <FeaturesSection />
         <PreviewSection />
         <HowItWorksSection />
+        <DocsSection />
+        <PricingSection />
         <SocialProofSection />
+        <RoadmapSection />
+        <EcosystemSection />
         <CTASection />
         <Footer />
       </motion.div>
@@ -273,27 +298,30 @@ function NavBar() {
         </span>
       </div>
       <div className="hidden items-center gap-8 md:flex">
-        {["Product", "Docs", "Pricing", "Blog"].map((item) => (
+        {NAV_ITEMS.map((item) => (
           <a
-            key={item}
-            href="#"
+            key={item.label}
+            href={item.href}
             className="text-sm font-medium text-[#9FB3B8] transition-colors hover:text-white"
           >
-            {item}
+            {item.label}
           </a>
         ))}
       </div>
       <div className="flex items-center gap-4">
         <a
-          href="#"
+          href="#preview"
           className="hidden text-sm font-medium text-[#E6F7F6] md:block hover:text-[#7AF5E8] transition-colors"
         >
-          Sign in
+          Live Preview
         </a>
-        <button className="group relative overflow-hidden rounded-full bg-[#1BA99C] px-5 py-2 text-sm font-semibold text-black transition-all hover:scale-105 hover:bg-[#23C9B9]">
+        <a
+          href="#waitlist"
+          className="group relative overflow-hidden rounded-full bg-[#1BA99C] px-5 py-2 text-sm font-semibold text-black transition-all hover:scale-105 hover:bg-[#23C9B9]"
+        >
           <span className="relative z-10">Get Early Access</span>
           <div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite]" />
-        </button>
+        </a>
       </div>
     </nav>
   );
@@ -339,8 +367,28 @@ function HeroSection({ onEnterMap }: { onEnterMap: () => void }) {
     onEnterMap();
   }, [onEnterMap]);
 
+  const revealToSection = useCallback(
+    (id: string) => {
+      if (phase === "map") {
+        scrollToSection(id);
+        return;
+      }
+
+      if (transitioning) return;
+      setTransitioning(true);
+      setTimeout(() => {
+        setPhase("map");
+        setTransitioning(false);
+        onEnterMap();
+        setTimeout(() => scrollToSection(id), 250);
+      }, 800);
+    },
+    [phase, transitioning, onEnterMap],
+  );
+
   return (
     <section
+      id="hero"
       ref={containerRef}
       onMouseMove={handleMouseMove}
       className="relative flex min-h-screen items-center overflow-hidden"
@@ -392,13 +440,16 @@ function HeroSection({ onEnterMap }: { onEnterMap: () => void }) {
                 transition={{ delay: 2.8, duration: 0.8 }}
               >
                 <button
-                  onClick={handleReveal}
+                  onClick={() => revealToSection("waitlist")}
                   className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-[#23C9B9] to-[#1BA99C] px-7 py-3.5 text-sm font-semibold text-black transition-all hover:scale-105 hover:shadow-[0_0_28px_rgba(35,201,185,0.4)]"
                 >
                   Get Early Access
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </button>
-                <button className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-7 py-3.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:bg-white/10">
+                <button
+                  onClick={() => revealToSection("preview")}
+                  className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-7 py-3.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:bg-white/10"
+                >
                   <Play className="h-3.5 w-3.5 fill-white/80" />
                   View Demo
                 </button>
@@ -462,11 +513,17 @@ function HeroSection({ onEnterMap }: { onEnterMap: () => void }) {
               </p>
 
               <div className="flex flex-col w-full sm:flex-row sm:w-auto items-center gap-4">
-                <button className="group w-full sm:w-auto flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#23C9B9] to-[#1BA99C] px-8 py-4 text-base font-semibold text-black transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(35,201,185,0.4)]">
+                <button
+                  onClick={() => scrollToSection("waitlist")}
+                  className="group w-full sm:w-auto flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#23C9B9] to-[#1BA99C] px-8 py-4 text-base font-semibold text-black transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(35,201,185,0.4)]"
+                >
                   Get Early Access
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </button>
-                <button className="group w-full sm:w-auto flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-4 text-base font-medium text-white backdrop-blur-md transition-all hover:bg-white/10">
+                <button
+                  onClick={() => scrollToSection("preview")}
+                  className="group w-full sm:w-auto flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-4 text-base font-medium text-white backdrop-blur-md transition-all hover:bg-white/10"
+                >
                   <Play className="h-4 w-4 fill-white/80 transition-transform group-hover:scale-110" />
                   View Demo
                 </button>
@@ -520,7 +577,7 @@ const FEATURES = [
 
 function FeaturesSection() {
   return (
-    <section className="relative py-32">
+    <section id="product" className="relative py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         <div className="mb-16 max-w-2xl">
           <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl mb-4">
@@ -529,8 +586,8 @@ function FeaturesSection() {
             Zero complexity.
           </h2>
           <p className="text-lg text-[#9FB3B8]">
-            We built CroVew to give founders the exact insights they need
-            without the bloated dashboards of traditional analytics.
+            Built for solo founders and early SaaS teams that need a live user
+            view before they need a full analytics stack.
           </p>
         </div>
 
@@ -563,7 +620,7 @@ function FeaturesSection() {
 
 function PreviewSection() {
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section id="preview" className="relative py-24 overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-[#23C9B9]/5 blur-[150px] pointer-events-none" />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-12 relative z-10">
@@ -607,28 +664,26 @@ function PreviewSection() {
               <div className="rounded-lg border border-white/5 bg-[#0B0F14] p-4 flex-1">
                 <div className="text-xs text-[#6B7C80] mb-4">Live Traffic</div>
                 <div className="flex items-end gap-1 h-32">
-                  {[40, 20, 50, 80, 45, 60, 30, 90, 70, 85, 40, 65, 50].map(
-                    (val, i) => (
+                  {PREVIEW_BARS.map((bar, i) => (
                       <motion.div
                         key={i}
                         className="w-full bg-[#23C9B9]/20 rounded-t-sm relative"
-                        style={{ height: `${val}%` }}
+                        style={{ height: `${bar.value}%` }}
                         animate={{
                           height: [
-                            `${val}%`,
-                            `${val + (Math.random() * 20 - 10)}%`,
-                            `${val}%`,
+                            `${bar.value}%`,
+                            `${bar.peak}%`,
+                            `${bar.value}%`,
                           ],
                         }}
                         transition={{
-                          duration: 2 + Math.random() * 2,
+                          duration: bar.duration,
                           repeat: Infinity,
                         }}
                       >
                         <div className="absolute top-0 left-0 right-0 h-1 bg-[#23C9B9] rounded-t-sm" />
                       </motion.div>
-                    ),
-                  )}
+                    ))}
                 </div>
               </div>
             </div>
@@ -694,17 +749,17 @@ function HowItWorksSection() {
     {
       num: "01",
       title: "Install SDK",
-      desc: "Add our tiny snippet to your app. React, Next.js, Vue supported out of the box.",
+      desc: "Drop in one script tag and start tracking pageviews and sessions in minutes.",
     },
     {
       num: "02",
-      title: "Track Events",
-      desc: "CroVew automatically collects interactions, clicks, and pageviews.",
+      title: "Identify And Track",
+      desc: "Call identify() and track() only where you need product-level signal.",
     },
     {
       num: "03",
       title: "Visualize Behavior",
-      desc: "Watch your users navigate your app in real-time on the global dashboard.",
+      desc: "See live users, event stream, geo presence, retention, and peak activity in one view.",
     },
   ];
 
@@ -743,20 +798,322 @@ function HowItWorksSection() {
   );
 }
 
+function DocsSection() {
+  return (
+    <section id="docs" className="border-t border-white/5 py-24">
+      <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-12">
+        <div>
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-[#7AF5E8]/70">
+            Quick Start
+          </p>
+          <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+            Ship CroVew before the bigger analytics stack.
+          </h2>
+          <p className="max-w-2xl text-lg text-[#9FB3B8]">
+            The MVP brief is clear: integrate in under 5 minutes, see useful
+            signal immediately, and avoid collecting anything you did not
+            explicitly ask for.
+          </p>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {[
+              {
+                icon: Code,
+                title: "Tiny SDK",
+                body: "Script tag install, SPA pageviews, heartbeats, sendBeacon on close, batching and retry.",
+              },
+              {
+                icon: KeyRound,
+                title: "Project Keys",
+                body: "Each product gets its own project_id and API key with clean tenant isolation.",
+              },
+              {
+                icon: Shield,
+                title: "Privacy By Default",
+                body: "No passwords, payment details, keystrokes, GPS coordinates, or hidden PII capture.",
+              },
+              {
+                icon: Users,
+                title: "Founder-first",
+                body: "Live user panel, event stream, geo presence, and retention without analytics-engineer overhead.",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-white/5 bg-[#0B0F14] p-5"
+              >
+                <item.icon className="mb-4 h-5 w-5 text-[#23C9B9]" />
+                <h3 className="mb-2 text-base font-medium text-white">
+                  {item.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-[#9FB3B8]">
+                  {item.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-[#0B0F14]/90 p-6 shadow-2xl">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="text-sm font-medium text-white">
+              Install snippet
+            </span>
+            <a
+              href="https://github.com/Ashish-khanagwal/crovew"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 text-sm text-[#7AF5E8] transition-colors hover:text-white"
+            >
+              GitHub
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
+          <pre className="overflow-x-auto rounded-xl border border-white/5 bg-black/30 p-4 text-sm leading-7 text-[#E6F7F6]">
+            <code>{`<script src="https://cdn.crovew.com/sdk.js"></script>
+<script>
+  CroVew.init({ projectId: "proj_live_xxx" })
+  CroVew.identify("user_123", { plan: "pro" })
+  CroVew.track("upgrade_clicked", { source: "pricing" })
+</script>`}</code>
+          </pre>
+
+          <div className="mt-5 space-y-3">
+            {[
+              "Auto pageview tracking across routes",
+              "Online / away / offline live presence",
+              "Retention cohorts from D0 to D30",
+              "Country and city visibility without exact location",
+            ].map((item) => (
+              <div
+                key={item}
+                className="flex items-start gap-3 text-sm text-[#9FB3B8]"
+              >
+                <span className="mt-1 h-2 w-2 rounded-full bg-[#23C9B9]" />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PricingSection() {
+  return (
+    <section id="pricing" className="border-t border-white/5 py-24">
+      <div className="mx-auto max-w-7xl px-6 lg:px-12">
+        <div className="mb-14 max-w-2xl">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-[#7AF5E8]/70">
+            Pricing
+          </p>
+          <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+            Start free while you find your signal.
+          </h2>
+          <p className="text-lg text-[#9FB3B8]">
+            The brief positions CroVew as the analytics layer founders install
+            before they have the time or scale for heavier tools.
+          </p>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          {[
+            {
+              name: "Starter",
+              price: "Free",
+              desc: "For solo builders validating a new product.",
+              points: ["1 project", "Live user panel", "Event stream", "Geo visibility"],
+              featured: false,
+            },
+            {
+              name: "Growth",
+              price: "Coming soon",
+              desc: "For teams that need more seats, exports, and alerts.",
+              points: ["Multiple projects", "Email + Slack alerts", "CSV export", "Custom dashboards"],
+              featured: true,
+            },
+            {
+              name: "Scale",
+              price: "Roadmap",
+              desc: "For privacy-sensitive and self-hosting teams.",
+              points: ["Postgres migration", "SSO", "Self-hosting", "White-label embed"],
+              featured: false,
+            },
+          ].map((plan) => (
+            <div
+              key={plan.name}
+              className={`rounded-2xl border p-7 ${
+                plan.featured
+                  ? "border-[#23C9B9]/40 bg-[#0F1720]"
+                  : "border-white/5 bg-[#0B0F14]"
+              }`}
+            >
+              <div className="mb-6 flex items-center justify-between">
+                <h3 className="text-xl font-medium text-white">{plan.name}</h3>
+                {plan.featured && (
+                  <span className="rounded-full border border-[#23C9B9]/30 bg-[#23C9B9]/10 px-3 py-1 text-xs font-medium text-[#7AF5E8]">
+                    Most likely next
+                  </span>
+                )}
+              </div>
+              <div className="mb-2 text-3xl font-semibold text-white">
+                {plan.price}
+              </div>
+              <p className="mb-6 text-sm leading-relaxed text-[#9FB3B8]">
+                {plan.desc}
+              </p>
+              <div className="space-y-3 text-sm text-[#E6F7F6]">
+                {plan.points.map((point) => (
+                  <div key={point} className="flex items-start gap-3">
+                    <span className="mt-1 h-2 w-2 rounded-full bg-[#23C9B9]" />
+                    <span>{point}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function SocialProofSection() {
   return (
     <section className="py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-12 text-center">
         <p className="text-sm font-medium text-[#6B7C80] mb-8 uppercase tracking-widest">
-          Built for modern SaaS teams
+          Built for the people shipping before they have an analytics team
         </p>
-        <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-40 grayscale">
-          {["ACME", "PROXIMA", "VERTEX", "QUANTUM", "ECHO"].map((logo) => (
+        <div className="flex flex-wrap justify-center gap-4 md:gap-5">
+          {[
+            "Solo founders",
+            "Indie hackers",
+            "Early-stage SaaS teams",
+            "Product engineers",
+            "Growth operators",
+          ].map((label) => (
             <div
-              key={logo}
-              className="text-xl md:text-2xl font-black tracking-tighter text-white font-serif italic"
+              key={label}
+              className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-[#E6F7F6]"
             >
-              {logo}
+              {label}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RoadmapSection() {
+  return (
+    <section id="roadmap" className="border-t border-white/5 py-24">
+      <div className="mx-auto max-w-7xl px-6 lg:px-12">
+        <div className="mb-14 max-w-2xl">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-[#7AF5E8]/70">
+            Roadmap
+          </p>
+          <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+            What ships after the MVP earns real usage.
+          </h2>
+          <p className="text-lg text-[#9FB3B8]">
+            The product document already defines the sequence: signal first,
+            depth next, scale after that.
+          </p>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          {[
+            {
+              icon: Activity,
+              phase: "Phase 2",
+              title: "Signal",
+              body: "Churn risk scoring, power-user detection, funnel analysis, property filtering, Slack alerts.",
+            },
+            {
+              icon: BarChart3,
+              phase: "Phase 3",
+              title: "Depth",
+              body: "Feature adoption, privacy-safe session replay, A/B visibility, custom dashboards, CSV export, APIs.",
+            },
+            {
+              icon: Clock3,
+              phase: "Phase 4",
+              title: "Scale",
+              body: "Postgres, self-hosting, npm SDK, SSO, team seats, white-label embed, usage-based billing.",
+            },
+          ].map((item) => (
+            <div
+              key={item.phase}
+              className="rounded-2xl border border-white/5 bg-[#0B0F14] p-7"
+            >
+              <item.icon className="mb-5 h-5 w-5 text-[#23C9B9]" />
+              <p className="mb-2 text-xs font-medium uppercase tracking-[0.24em] text-[#7AF5E8]/70">
+                {item.phase}
+              </p>
+              <h3 className="mb-3 text-xl font-medium text-white">
+                {item.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-[#9FB3B8]">
+                {item.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function EcosystemSection() {
+  return (
+    <section id="company" className="border-t border-white/5 py-24">
+      <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-12">
+        <div>
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-[#7AF5E8]/70">
+            Ecosystem
+          </p>
+          <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+            CroVew sits inside the broader Croovi operating layer.
+          </h2>
+          <p className="text-lg text-[#9FB3B8]">
+            Your brand board already frames the story well: Croovi is the
+            platform, CroFlux handles project and task flow, CroFx handles
+            automation, and CroVew provides visibility.
+          </p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          {[
+            {
+              name: "Croovi",
+              role: "Platform",
+              accent: "from-fuchsia-400 to-violet-500",
+            },
+            {
+              name: "CroFlux",
+              role: "Project & Task",
+              accent: "from-violet-400 to-purple-500",
+            },
+            {
+              name: "CroVew",
+              role: "Visibility",
+              accent: "from-[#23C9B9] to-[#0F7F78]",
+            },
+          ].map((item) => (
+            <div
+              key={item.name}
+              className="rounded-2xl border border-white/5 bg-[#0B0F14] p-6"
+            >
+              <div
+                className={`mb-5 h-1.5 w-16 rounded-full bg-gradient-to-r ${item.accent}`}
+              />
+              <h3 className="mb-2 text-xl font-medium text-white">
+                {item.name}
+              </h3>
+              <p className="text-sm text-[#9FB3B8]">{item.role}</p>
             </div>
           ))}
         </div>
@@ -767,7 +1124,7 @@ function SocialProofSection() {
 
 function CTASection() {
   return (
-    <section className="py-32 relative overflow-hidden">
+    <section id="waitlist" className="py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-[#23C9B9]/5 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_20%,transparent_100%)]" />
 
       <div className="mx-auto max-w-3xl px-6 relative z-10 text-center flex flex-col items-center">
@@ -790,13 +1147,29 @@ function CTASection() {
           through your users' eyes
         </h2>
         <p className="text-lg text-[#9FB3B8] mb-10">
-          Join the waitlist today and be among the first to experience the god
-          view for your application.
+          Join the early-access list for the MVP: live users, event stream,
+          geo presence, retention cohorts, and a tiny SDK built for founders.
         </p>
-        <button className="group relative overflow-hidden rounded-full bg-white px-8 py-4 text-base font-semibold text-black transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-          <span className="relative z-10">Join Waitlist</span>
-          <div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-[#23C9B9]/20 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite]" />
-        </button>
+        <div className="flex flex-col items-center gap-4 sm:flex-row">
+          <a
+            href="https://github.com/Ashish-khanagwal/crovew"
+            target="_blank"
+            rel="noreferrer"
+            className="group relative overflow-hidden rounded-full bg-white px-8 py-4 text-base font-semibold text-black transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]"
+          >
+            <span className="relative z-10 inline-flex items-center gap-2">
+              View Project
+              <ArrowUpRight className="h-4 w-4" />
+            </span>
+            <div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-[#23C9B9]/20 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite]" />
+          </a>
+          <a
+            href="#docs"
+            className="rounded-full border border-white/10 bg-white/5 px-8 py-4 text-base font-medium text-white transition-all hover:bg-white/10"
+          >
+            Read The MVP
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -820,19 +1193,19 @@ function Footer() {
         </div>
 
         <div className="flex flex-wrap justify-center gap-6 text-sm text-[#6B7C80]">
-          <a href="#" className="hover:text-white transition-colors">
+          <a href="#product" className="hover:text-white transition-colors">
             Product
           </a>
-          <a href="#" className="hover:text-white transition-colors">
+          <a href="#docs" className="hover:text-white transition-colors">
             Docs
           </a>
-          <a href="#" className="hover:text-white transition-colors">
+          <a href="#pricing" className="hover:text-white transition-colors">
             Pricing
           </a>
-          <a href="#" className="hover:text-white transition-colors">
-            Blog
+          <a href="#roadmap" className="hover:text-white transition-colors">
+            Roadmap
           </a>
-          <a href="#" className="hover:text-white transition-colors">
+          <a href="#company" className="hover:text-white transition-colors">
             Company
           </a>
         </div>
