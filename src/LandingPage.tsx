@@ -592,39 +592,39 @@ function HeroSection({ onEnterMap }: { onEnterMap: () => void }) {
 const FEATURES = [
   {
     icon: Activity,
-    title: "Real-time Event Stream",
+    title: "Live User Activity",
     description:
-      "See exactly what users are doing live as it happens. Watch your product heartbeat.",
+      "See every interaction as it happens - page views, clicks, and feature usage streamed in real time so you always know what is happening inside your product.",
   },
   {
     icon: MousePointerClick,
-    title: "Session Insights",
+    title: "Session Understanding",
     description:
-      "Understand user journeys, identify friction points, and see drop-offs immediately.",
+      "Follow complete user journeys and instantly spot friction points, confusing flows, and drop-offs before they impact growth.",
   },
   {
     icon: Globe,
-    title: "Geo Analytics",
+    title: "Global Usage Visibility",
     description:
-      "Visualize globally where your users are coming from and how they interact.",
+      "Understand where users are coming from, how they behave across regions, and which markets are gaining traction.",
   },
   {
     icon: Code,
-    title: "Lightweight SDK",
+    title: "Fast Integration",
     description:
-      "Integrate in minutes with our zero-dependency SDK. Zero performance impact.",
+      "Start tracking events in minutes with a lightweight SDK designed for minimal setup and zero performance overhead.",
   },
   {
     icon: ShieldCheck,
-    title: "Privacy First",
+    title: "Privacy-Conscious Tracking",
     description:
-      "See behavior patterns without storing invasive PII data. Store nothing long-term.",
+      "Observe behavior patterns without storing sensitive personal data. Built for modern privacy expectations.",
   },
   {
     icon: Terminal,
-    title: "Developer Friendly",
+    title: "Built for Builders",
     description:
-      "Clean API, comprehensive docs, and webhooks to trigger your own workflows.",
+      "Simple APIs, clean documentation, and flexible event tracking designed for developers shipping fast.",
   },
 ];
 
@@ -634,13 +634,15 @@ function FeaturesSection() {
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         <div className="mb-16 max-w-2xl">
           <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl mb-4">
-            Omniscient visibility.
-            <br />
-            Zero complexity.
+            Product clarity without analytics complexity
           </h2>
           <p className="text-lg text-[#9FB3B8]">
-            Built for solo founders and early SaaS teams that need a live user
-            view before they need a full analytics stack.
+            CroVew gives solo founders and early SaaS teams a real-time view of
+            user behavior, so you can understand what works, fix what does not,
+            and improve faster.
+          </p>
+          <p className="mt-4 text-lg text-[#9FB3B8]">
+            No heavy setup. No complex dashboards. Just clarity.
           </p>
         </div>
 
