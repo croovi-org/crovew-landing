@@ -105,7 +105,7 @@ function DotMarker({ dot }: { dot: Dot }) {
         />
         <circle r={1.5} fill="#7AF5E8" />
 
-        {/* Tooltip — rendered as SVG foreignObject */}
+        {/* Tooltip rendered as SVG foreignObject */}
         {dot.showTooltip && (
           <foreignObject
             x={-tooltipWidth / 2}
