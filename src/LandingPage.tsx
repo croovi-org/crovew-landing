@@ -105,6 +105,8 @@ const PREVIEW_BARS = [40, 20, 50, 80, 45, 60, 30, 90, 70, 85, 40, 65, 50].map(
   }),
 );
 
+const HERO_SHELL = "max-w-[1360px]";
+
 function scrollToSection(id: string) {
   const element = document.getElementById(id);
   if (!element) return;
@@ -320,49 +322,53 @@ function IntroAnimation({ onComplete }: { onComplete: () => void }) {
 
 function NavBar() {
   return (
-    <nav className="absolute left-0 right-0 top-0 z-40 flex items-center justify-between px-6 py-6 lg:px-12">
-      <div className="flex items-center gap-2">
-        <div style={{ filter: "drop-shadow(0 0 8px rgba(35,201,185,0.5))" }}>
-          <img
-            src={crovewLogo}
-            alt="CroVew"
-            style={{ width: 68, height: "auto" }}
-          />
+    <nav className="absolute inset-x-0 top-0 z-40 py-6">
+      <div
+        className={`mx-auto flex w-full items-center justify-between px-6 lg:px-12 ${HERO_SHELL}`}
+      >
+        <div className="flex items-center gap-2">
+          <div style={{ filter: "drop-shadow(0 0 8px rgba(35,201,185,0.5))" }}>
+            <img
+              src={crovewLogo}
+              alt="CroVew"
+              style={{ width: 68, height: "auto" }}
+            />
+          </div>
+          <span className="text-xl font-bold tracking-tight text-white">
+            CroVew
+          </span>
         </div>
-        <span className="text-xl font-bold tracking-tight text-white">
-          CroVew
-        </span>
-      </div>
-      <div className="hidden items-center gap-8 md:flex">
-        {NAV_ITEMS.map((item) => (
+        <div className="hidden items-center gap-8 md:flex">
+          {NAV_ITEMS.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              onClick={(event) =>
+                handleSectionLinkClick(item.href.replace("#", ""), event)
+              }
+              className="text-sm font-medium text-[#9FB3B8] transition-colors hover:text-white"
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+        <div className="flex items-center gap-4">
           <a
-            key={item.label}
-            href={item.href}
-            onClick={(event) =>
-              handleSectionLinkClick(item.href.replace("#", ""), event)
-            }
-            className="text-sm font-medium text-[#9FB3B8] transition-colors hover:text-white"
+            href="#preview"
+            onClick={(event) => handleSectionLinkClick("preview", event)}
+            className="hidden text-sm font-medium text-[#E6F7F6] md:block hover:text-[#7AF5E8] transition-colors"
           >
-            {item.label}
+            Live Preview
           </a>
-        ))}
-      </div>
-      <div className="flex items-center gap-4">
-        <a
-          href="#preview"
-          onClick={(event) => handleSectionLinkClick("preview", event)}
-          className="hidden text-sm font-medium text-[#E6F7F6] md:block hover:text-[#7AF5E8] transition-colors"
-        >
-          Live Preview
-        </a>
-        <a
-          href="#waitlist"
-          onClick={(event) => handleSectionLinkClick("waitlist", event)}
-          className="group relative overflow-hidden rounded-full bg-[#1BA99C] px-5 py-2 text-sm font-semibold text-black transition-all hover:scale-105 hover:bg-[#23C9B9]"
-        >
-          <span className="relative z-10">Get Early Access</span>
-          <div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite]" />
-        </a>
+          <a
+            href="#waitlist"
+            onClick={(event) => handleSectionLinkClick("waitlist", event)}
+            className="group relative overflow-hidden rounded-full bg-[#1BA99C] px-5 py-2 text-sm font-semibold text-black transition-all hover:scale-105 hover:bg-[#23C9B9]"
+          >
+            <span className="relative z-10">Get Early Access</span>
+            <div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite]" />
+          </a>
+        </div>
       </div>
     </nav>
   );
@@ -500,76 +506,82 @@ function HeroSection({ onEnterMap }: { onEnterMap: () => void }) {
         )}
       </AnimatePresence>
 
-      {/* ── MAP PHASE ── */}
+      {/* Map phase */}
       {phase === "map" && (
         <>
-          {/* Map */}
-          <motion.div
-            className="absolute right-6 lg:right-12 top-0 bottom-0 w-[58%] z-0 pointer-events-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.1, delay: 0.35 }}
-            style={{
-              transform: `translate3d(${mousePos.x * 18}px, ${mousePos.y * 12}px, 0)`,
-            }}
-          >
-            <AnimatedWorldMap />
-          </motion.div>
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <div className={`relative mx-auto h-full w-full px-6 lg:px-12 ${HERO_SHELL}`}>
+              <div className="relative ml-auto h-full w-full max-w-[1260px] overflow-hidden lg:translate-x-[200px]">
+                <motion.div
+                  className="absolute right-0 top-1/2 h-[78vh] max-h-[840px] w-full -translate-y-1/2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1.1, delay: 0.35 }}
+                  style={{
+                    transform: `translate3d(${mousePos.x * 18}px, ${mousePos.y * 12}px, 0)`,
+                  }}
+                >
+                  <AnimatedWorldMap />
+                </motion.div>
+              </div>
 
-          {/* Left gradient */}
+              <div className="absolute inset-y-0 left-0 w-[57%] bg-gradient-to-r from-[#05070A] via-[#05070A]/90 to-transparent" />
+            </div>
+          </div>
+
           <div
-            className="absolute inset-0 z-[1] bg-gradient-to-r from-[#05070A] via-[#05070A]/85 to-transparent pointer-events-none"
-            style={{ width: "55%" }}
-          />
+            className={`relative z-10 mx-auto w-full px-6 pt-24 lg:px-12 ${HERO_SHELL}`}
+          >
+            <div className="grid min-h-[92vh] items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)] lg:gap-8">
+              <motion.div
+                className="flex max-w-xl flex-col items-start gap-8"
+                initial={{ opacity: 0, x: -28 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.85, delay: 0.5, ease: "easeOut" }}
+                style={{
+                  transform: `translate3d(${mousePos.x * -20}px, ${mousePos.y * -20}px, 0)`,
+                }}
+              >
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#23C9B9]/30 bg-[#23C9B9]/10 px-3 py-1 text-xs font-medium text-[#7AF5E8]">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#7AF5E8] opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-[#7AF5E8]" />
+                  </span>
+                  SEE EVERYTHING. STORE NOTHING.
+                </div>
 
-          {/* Hero text */}
-          <div className="relative z-10 mx-auto w-full max-w-7xl px-6 lg:px-12 pt-24">
-            <motion.div
-              className="flex flex-col items-start gap-8 max-w-xl"
-              initial={{ opacity: 0, x: -28 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.85, delay: 0.5, ease: "easeOut" }}
-              style={{
-                transform: `translate3d(${mousePos.x * -20}px, ${mousePos.y * -20}px, 0)`,
-              }}
-            >
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#23C9B9]/30 bg-[#23C9B9]/10 px-3 py-1 text-xs font-medium text-[#7AF5E8]">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#7AF5E8] opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#7AF5E8]" />
-                </span>
-                SEE EVERYTHING. STORE NOTHING.
-              </div>
+                <h1 className="text-4xl font-semibold leading-[1.06] tracking-tight text-white sm:text-5xl lg:text-[4.5rem]">
+                  See everything happening inside your product{" "}
+                  <span className="bg-gradient-to-r from-[#23C9B9] to-[#0F7F78] bg-clip-text text-transparent">
+                    live.
+                  </span>
+                </h1>
 
-              <h1 className="text-5xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl">
-                See everything happening inside your product{" "}
-                <span className="bg-gradient-to-r from-[#23C9B9] to-[#0F7F78] bg-clip-text text-transparent">
-                  live.
-                </span>
-              </h1>
+                <p className="max-w-md text-base leading-8 text-[#9FB3B8] sm:text-lg">
+                  CroVew gives you real-time visibility into user activity,
+                  sessions, and engagement without heavy analytics complexity.
+                </p>
 
-              <p className="max-w-lg text-lg text-[#9FB3B8] sm:text-xl">
-                CroVew gives you real-time visibility into user activity,
-                sessions, and engagement without heavy analytics complexity.
-              </p>
+                <div className="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row">
+                  <button
+                    onClick={() => scrollToSection("waitlist")}
+                    className="group flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#23C9B9] to-[#1BA99C] px-8 py-4 text-base font-semibold text-black transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(35,201,185,0.4)] sm:w-auto"
+                  >
+                    Get Early Access
+                    <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+                  <button
+                    onClick={() => scrollToSection("preview")}
+                    className="group flex w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-4 text-base font-medium text-white backdrop-blur-md transition-all hover:bg-white/10 sm:w-auto"
+                  >
+                    <Play className="h-4 w-4 fill-white/80 transition-transform group-hover:scale-110" />
+                    View Demo
+                  </button>
+                </div>
+              </motion.div>
 
-              <div className="flex flex-col w-full sm:flex-row sm:w-auto items-center gap-4">
-                <button
-                  onClick={() => scrollToSection("waitlist")}
-                  className="group w-full sm:w-auto flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#23C9B9] to-[#1BA99C] px-8 py-4 text-base font-semibold text-black transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(35,201,185,0.4)]"
-                >
-                  Get Early Access
-                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </button>
-                <button
-                  onClick={() => scrollToSection("preview")}
-                  className="group w-full sm:w-auto flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-4 text-base font-medium text-white backdrop-blur-md transition-all hover:bg-white/10"
-                >
-                  <Play className="h-4 w-4 fill-white/80 transition-transform group-hover:scale-110" />
-                  View Demo
-                </button>
-              </div>
-            </motion.div>
+              <div className="hidden lg:block" aria-hidden="true" />
+            </div>
           </div>
         </>
       )}
