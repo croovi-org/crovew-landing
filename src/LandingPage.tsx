@@ -238,7 +238,7 @@ function IntroAnimation({ onComplete }: { onComplete: () => void }) {
       exit={{ opacity: 0, scale: 1.05 }}
       transition={{ duration: 1, ease: "easeInOut" }}
     >
-      {/* Scanning grid — fills entire screen */}
+      {/* Scanning grid fills entire screen */}
       <motion.div
         className="absolute inset-0 bg-[linear-gradient(rgba(35,201,185,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(35,201,185,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-0"
         animate={{ opacity: [0, 1, 0] }}
@@ -290,7 +290,7 @@ function IntroAnimation({ onComplete }: { onComplete: () => void }) {
           </motion.div>
         </div>
 
-        {/* Brand text — centered naturally in the flex column */}
+        {/* Brand text centered naturally in the flex column */}
         <motion.div
           className="flex flex-col items-center gap-1.5"
           initial={{ opacity: 0, y: 10 }}
@@ -437,14 +437,14 @@ function HeroSection({ onEnterMap }: { onEnterMap: () => void }) {
       {/* Background Grid */}
       <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,#000_20%,transparent_100%)]" />
 
-      {/* Ambient glow — shifts position between globe/map phase */}
+      {/* Ambient glow shifts position between globe/map phase */}
       <motion.div
         className="absolute z-0 h-[60vh] w-[60vw] rounded-full bg-[#23C9B9] opacity-[0.06] blur-[120px] pointer-events-none"
         animate={{ left: phase === "globe" ? "20%" : "35%", top: "20%" }}
         transition={{ duration: 1.4, ease: [0.4, 0, 0.2, 1] }}
       />
 
-      {/* ── GLOBE PHASE — fills entire hero section ── */}
+      {/* Globe phase fills entire hero section */}
       <AnimatePresence>
         {phase === "globe" && (
           <motion.div
@@ -544,7 +544,7 @@ function HeroSection({ onEnterMap }: { onEnterMap: () => void }) {
               <h1 className="text-5xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl">
                 See everything happening inside your product{" "}
                 <span className="bg-gradient-to-r from-[#23C9B9] to-[#0F7F78] bg-clip-text text-transparent">
-                  — live.
+                  live.
                 </span>
               </h1>
 
