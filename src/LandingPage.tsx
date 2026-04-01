@@ -27,6 +27,7 @@ import crovewLogo from "@/assets/crovew-logo-cropped.png";
 import { AnimatedWorldMap } from "./WorldMap";
 import { GlobeScene, isWebGLAvailable } from "./GlobeScene";
 import { EyeCursor } from "./components/EyeCursor";
+import { EcosystemMap } from "./components/EcosystemMap";
 
 const COLORS = {
   bg: "#05070A",
@@ -202,7 +203,7 @@ export function LandingPage() {
         <PricingSection />
         <SocialProofSection />
         <RoadmapSection />
-        <EcosystemSection />
+        <EcosystemMap />
         <CTASection />
         <Footer />
       </motion.div>
@@ -1099,61 +1100,6 @@ function RoadmapSection() {
               <p className="text-sm leading-relaxed text-[#9FB3B8]">
                 {item.body}
               </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function EcosystemSection() {
-  return (
-    <section id="company" className="border-t border-white/5 py-24">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-12">
-        <div>
-          <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-[#7AF5E8]/70">
-            Ecosystem
-          </p>
-          <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            CroVew sits inside the broader Croovi operating layer.
-          </h2>
-          <p className="text-lg text-[#9FB3B8]">
-            Your brand board already frames the story well: Croovi is the
-            platform, CroFlux handles project and task flow, CroFx handles
-            automation, and CroVew provides visibility.
-          </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-3">
-          {[
-            {
-              name: "Croovi",
-              role: "Platform",
-              accent: "from-fuchsia-400 to-violet-500",
-            },
-            {
-              name: "CroFlux",
-              role: "Project & Task",
-              accent: "from-violet-400 to-purple-500",
-            },
-            {
-              name: "CroVew",
-              role: "Visibility",
-              accent: "from-[#23C9B9] to-[#0F7F78]",
-            },
-          ].map((item) => (
-            <div
-              key={item.name}
-              className="rounded-2xl border border-white/5 bg-[#0B0F14] p-6"
-            >
-              <div
-                className={`mb-5 h-1.5 w-16 rounded-full bg-gradient-to-r ${item.accent}`}
-              />
-              <h3 className="mb-2 text-xl font-medium text-white">
-                {item.name}
-              </h3>
-              <p className="text-sm text-[#9FB3B8]">{item.role}</p>
             </div>
           ))}
         </div>
