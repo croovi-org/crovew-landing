@@ -107,7 +107,40 @@ const PREVIEW_BARS = [40, 20, 50, 80, 45, 60, 30, 90, 70, 85, 40, 65, 50].map(
 function scrollToSection(id: string) {
   const element = document.getElementById(id);
   if (!element) return;
-  element.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  const startY = window.scrollY;
+  const targetY = startY + element.getBoundingClientRect().top;
+  const distance = targetY - startY;
+  const duration = 1050;
+  const startTime = performance.now();
+
+  const easeInOutCubic = (t: number) =>
+    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  const animateScroll = (currentTime: number) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeInOutCubic(progress);
+
+    window.scrollTo({
+      top: startY + distance * easedProgress,
+      behavior: "auto",
+    });
+
+    if (progress < 1) {
+      window.requestAnimationFrame(animateScroll);
+    }
+  };
+
+  window.requestAnimationFrame(animateScroll);
+}
+
+function handleSectionLinkClick(
+  id: string,
+  event: React.MouseEvent<HTMLAnchorElement>,
+) {
+  event.preventDefault();
+  scrollToSection(id);
 }
 
 export function LandingPage() {
@@ -304,6 +337,9 @@ function NavBar() {
           <a
             key={item.label}
             href={item.href}
+            onClick={(event) =>
+              handleSectionLinkClick(item.href.replace("#", ""), event)
+            }
             className="text-sm font-medium text-[#9FB3B8] transition-colors hover:text-white"
           >
             {item.label}
@@ -313,12 +349,14 @@ function NavBar() {
       <div className="flex items-center gap-4">
         <a
           href="#preview"
+          onClick={(event) => handleSectionLinkClick("preview", event)}
           className="hidden text-sm font-medium text-[#E6F7F6] md:block hover:text-[#7AF5E8] transition-colors"
         >
           Live Preview
         </a>
         <a
           href="#waitlist"
+          onClick={(event) => handleSectionLinkClick("waitlist", event)}
           className="group relative overflow-hidden rounded-full bg-[#1BA99C] px-5 py-2 text-sm font-semibold text-black transition-all hover:scale-105 hover:bg-[#23C9B9]"
         >
           <span className="relative z-10">Get Early Access</span>
@@ -1167,6 +1205,7 @@ function CTASection() {
           </a>
           <a
             href="#docs"
+            onClick={(event) => handleSectionLinkClick("docs", event)}
             className="rounded-full border border-white/10 bg-white/5 px-8 py-4 text-base font-medium text-white transition-all hover:bg-white/10"
           >
             Read The MVP
@@ -1195,19 +1234,39 @@ function Footer() {
         </div>
 
         <div className="flex flex-wrap justify-center gap-6 text-sm text-[#6B7C80]">
-          <a href="#product" className="hover:text-white transition-colors">
+          <a
+            href="#product"
+            onClick={(event) => handleSectionLinkClick("product", event)}
+            className="hover:text-white transition-colors"
+          >
             Product
           </a>
-          <a href="#docs" className="hover:text-white transition-colors">
+          <a
+            href="#docs"
+            onClick={(event) => handleSectionLinkClick("docs", event)}
+            className="hover:text-white transition-colors"
+          >
             Docs
           </a>
-          <a href="#pricing" className="hover:text-white transition-colors">
+          <a
+            href="#pricing"
+            onClick={(event) => handleSectionLinkClick("pricing", event)}
+            className="hover:text-white transition-colors"
+          >
             Pricing
           </a>
-          <a href="#roadmap" className="hover:text-white transition-colors">
+          <a
+            href="#roadmap"
+            onClick={(event) => handleSectionLinkClick("roadmap", event)}
+            className="hover:text-white transition-colors"
+          >
             Roadmap
           </a>
-          <a href="#company" className="hover:text-white transition-colors">
+          <a
+            href="#company"
+            onClick={(event) => handleSectionLinkClick("company", event)}
+            className="hover:text-white transition-colors"
+          >
             Company
           </a>
         </div>
