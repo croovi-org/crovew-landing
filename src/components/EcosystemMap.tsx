@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 
+import crooviSymbol from "@/assets/croovi-symbol.png";
+
 type ProductCardProps = {
   accent: string;
   body: string;
@@ -10,34 +12,6 @@ type ProductCardProps = {
   logo: React.ReactNode;
   title: string;
 };
-
-function CrooviLogo() {
-  return (
-    <svg viewBox="0 0 120 120" className="h-14 w-14" aria-hidden="true">
-      <defs>
-        <linearGradient id="crooviGradient" x1="15" y1="14" x2="100" y2="105">
-          <stop offset="0%" stopColor="#F39BFF" />
-          <stop offset="55%" stopColor="#A856FF" />
-          <stop offset="100%" stopColor="#5DA8FF" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M88.7 23.1c-8.1-7.3-18.4-11.5-29.8-11.5-24.8 0-44.9 20.1-44.9 44.9S34.1 101.4 58.9 101.4c11.8 0 22.5-4.6 30.6-12.1-7.7 4.7-16.8 7.4-26.6 7.4-27.9 0-42.9-18.2-42.9-40.2S35 16.3 62.9 16.3c9.6 0 18.5 2.6 25.8 6.8Z"
-        fill="url(#crooviGradient)"
-      />
-      <path
-        d="M80.1 24.7c8.4 4.9 14.7 13.2 17.5 23.2-1-16.1-14.4-28.8-30.8-28.8-8.4 0-16.1 3.3-21.7 8.7 4.8-2.7 10.5-4.3 16.7-4.3 6.6 0 12.7 1.8 18.3 5.2Z"
-        fill="#F5C6FF"
-        fillOpacity="0.72"
-      />
-      <path
-        d="M39.5 91.4C30 86.2 23.1 76.6 20.8 65.3c.3 18.1 15.1 32.5 33.3 32.5 9 0 17.2-3.5 23.2-9.3-5.1 3-11.1 4.8-17.5 4.8-7.2 0-13.9-2.2-20.3-6.1Z"
-        fill="#6DBEFF"
-        fillOpacity="0.75"
-      />
-    </svg>
-  );
-}
 
 function StackLogo({ tone }: { tone: "flux" | "fx" }) {
   const primary = tone === "flux" ? "#D989FF" : "#FFD15C";
@@ -149,7 +123,7 @@ function ProductCard({
         />
       ) : null}
       <div className="relative z-10 flex flex-col items-center text-center">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-[20px] border border-white/10 bg-black/20 shadow-[0_0_30px_rgba(255,255,255,0.02)]">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center">
           {logo}
         </div>
         <h3 className="text-xl font-semibold tracking-tight text-white md:text-[1.35rem]">
@@ -285,31 +259,41 @@ export function EcosystemMap() {
               body="The operating layer that holds planning, context, product direction, and decision flow together."
               delay={0.12}
               accent="from-fuchsia-400/50 via-violet-400/35 to-cyan-400/20"
-              logo={<CrooviLogo />}
+              logo={
+                <img
+                  src={crooviSymbol}
+                  alt="Croovi symbol"
+                  className="h-16 w-16 -translate-x-[7px] -translate-y-[1px] object-contain"
+                />
+              }
             />
           </div>
 
-          <div className="mt-6 grid gap-4 md:mt-10 md:grid-cols-2 md:gap-6">
-            <ProductCard
-              title="CroFlux"
-              description="Project & Execution"
-              body="Turns strategy into structured work through projects, tasks, ownership, and execution flow."
-              delay={0.52}
-              glowColor="#D989FF"
-              href="https://croflux.vercel.app/"
-              accent="from-fuchsia-300/45 via-violet-400/35 to-indigo-500/22"
-              logo={<StackLogo tone="flux" />}
-            />
-            <ProductCard
-              title="CrooFx"
-              description="AI Automation"
-              body="Automates repetitive development workflows so teams can move faster with less manual overhead."
-              delay={0.66}
-              glowColor="#FFBE4A"
-              href="https://www.croovi.com/"
-              accent="from-amber-300/42 via-orange-400/30 to-fuchsia-500/16"
-              logo={<StackLogo tone="fx" />}
-            />
+          <div className="mt-6 grid justify-center gap-4 md:mt-10 md:grid-cols-2 md:gap-6">
+            <div className="mx-auto w-full max-w-[320px] md:max-w-[340px]">
+              <ProductCard
+                title="CroFlux"
+                description="Project & Execution"
+                body="Turns strategy into structured work through projects, tasks, ownership, and execution flow."
+                delay={0.52}
+                glowColor="#D989FF"
+                href="https://croflux.vercel.app/"
+                accent="from-fuchsia-300/45 via-violet-400/35 to-indigo-500/22"
+                logo={<StackLogo tone="flux" />}
+              />
+            </div>
+            <div className="mx-auto w-full max-w-[320px] md:max-w-[340px]">
+              <ProductCard
+                title="CrooFx"
+                description="AI Automation"
+                body="Automates repetitive development workflows so teams can move faster with less manual overhead."
+                delay={0.66}
+                glowColor="#FFBE4A"
+                href="https://www.croovi.com/"
+                accent="from-amber-300/42 via-orange-400/30 to-fuchsia-500/16"
+                logo={<StackLogo tone="fx" />}
+              />
+            </div>
           </div>
         </div>
       </div>
