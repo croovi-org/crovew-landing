@@ -862,46 +862,48 @@ function HowItWorksSection() {
 function DocsSection() {
   return (
     <section id="docs" className="border-t border-white/5 py-24">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-12">
-        <div>
+      <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch lg:px-12">
+        <div className="flex h-full flex-col">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-[#7AF5E8]/70">
             Quick Start
           </p>
           <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Ship CroVew before the bigger analytics stack.
+            Start capturing real user signals in under 5 minutes
           </h2>
           <p className="max-w-2xl text-lg text-[#9FB3B8]">
-            The MVP brief is clear: integrate in under 5 minutes, see useful
-            signal immediately, and avoid collecting anything you did not
-            explicitly ask for.
+            Integrate in minutes, capture meaningful product signals instantly,
+            and stay fully in control of what gets tracked.
           </p>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <p className="mt-8 mb-4 text-[11px] font-medium uppercase tracking-[0.24em] text-[#7AF5E8]/60">
+            What you get instantly
+          </p>
+          <div className="mt-8 grid flex-1 auto-rows-fr gap-4 sm:grid-cols-2">
             {[
               {
                 icon: Code,
                 title: "Tiny SDK",
-                body: "Script tag install, SPA pageviews, heartbeats, sendBeacon on close, batching and retry.",
+                body: "Lightweight script with auto pageviews, session heartbeat, sendBeacon delivery, batching, and retry logic.",
               },
               {
                 icon: KeyRound,
-                title: "Project Keys",
-                body: "Each product gets its own project_id and API key with clean tenant isolation.",
+                title: "Project-scoped keys",
+                body: "Each product gets an isolated project_id and API key with strict tenant separation.",
               },
               {
                 icon: Shield,
-                title: "Privacy By Default",
-                body: "No passwords, payment details, keystrokes, GPS coordinates, or hidden PII capture.",
+                title: "Privacy-first tracking",
+                body: "No passwords, keystrokes, payment data, or hidden PII collection. Track behavior without invading user privacy.",
               },
               {
                 icon: Users,
-                title: "Founder-first",
-                body: "Live user panel, event stream, geo presence, and retention without analytics-engineer overhead.",
+                title: "Built for builders",
+                body: "Live sessions, event stream, geo presence, and retention insights without needing a data team.",
               },
             ].map((item) => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-white/5 bg-[#0B0F14] p-5"
+                className="h-full rounded-2xl border border-white/5 bg-[#0B0F14] p-5"
               >
                 <item.icon className="mb-4 h-5 w-5 text-[#23C9B9]" />
                 <h3 className="mb-2 text-base font-medium text-white">
@@ -915,36 +917,38 @@ function DocsSection() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0B0F14]/90 p-6 shadow-2xl">
+        <div className="h-full rounded-2xl border border-white/10 bg-[#0B0F14]/90 p-6 shadow-2xl">
           <div className="mb-4 flex items-center justify-between">
             <span className="text-sm font-medium text-white">
               Install snippet
             </span>
-            <a
-              href="https://github.com/Ashish-khanagwal/crovew"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1 text-sm text-[#7AF5E8] transition-colors hover:text-white"
-            >
-              GitHub
-              <ArrowUpRight className="h-3.5 w-3.5" />
-            </a>
           </div>
           <pre className="overflow-x-auto rounded-xl border border-white/5 bg-black/30 p-4 text-sm leading-7 text-[#E6F7F6]">
             <code>{`<script src="https://cdn.crovew.com/sdk.js"></script>
 <script>
-  CroVew.init({ projectId: "proj_live_xxx" })
-  CroVew.identify("user_123", { plan: "pro" })
-  CroVew.track("upgrade_clicked", { source: "pricing" })
+  CroVew.init({
+    projectId: "proj_live_xxxxx",
+    environment: "production"
+  })
+
+  CroVew.identify("user_123", {
+    email: "user@email.com",
+    plan: "pro"
+  })
+
+  CroVew.track("upgrade_clicked", {
+    source: "pricing_page",
+    timestamp: Date.now()
+  })
 </script>`}</code>
           </pre>
 
           <div className="mt-5 space-y-3">
             {[
               "Auto pageview tracking across routes",
-              "Online / away / offline live presence",
-              "Retention cohorts from D0 to D30",
-              "Country and city visibility without exact location",
+              "Online / offline live user presence",
+              "Retention cohorts from Day 0 to Day 30",
+              "Country-level visibility without precise location tracking",
             ].map((item) => (
               <div
                 key={item}
