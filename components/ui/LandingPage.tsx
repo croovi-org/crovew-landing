@@ -973,51 +973,73 @@ function PricingSection() {
             Pricing
           </p>
           <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Start free while you find your signal.
+            Free for early builders.
           </h2>
           <p className="text-lg text-[#9FB3B8]">
-            The brief positions CroVew as the analytics layer founders install
-            before they have the time or scale for heavier tools.
+            CroVew is free during early access. Pricing will be introduced after
+            launch.
+          </p>
+          <p className="mt-3 text-sm text-[#6B7C80]">
+            Early users help shape the product.
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 lg:grid-cols-2">
           {[
             {
-              name: "Starter",
-              price: "Free",
-              desc: "For solo builders validating a new product.",
-              points: ["1 project", "Live user panel", "Event stream", "Geo visibility"],
-              featured: false,
-            },
-            {
-              name: "Growth",
-              price: "Coming soon",
-              desc: "For teams that need more seats, exports, and alerts.",
-              points: ["Multiple projects", "Email + Slack alerts", "CSV export", "Custom dashboards"],
+              name: "Early Builder Access",
+              price: "$0",
+              desc: "Free during beta",
+              note: "Limited spots for early users",
+              cta: "Get early access →",
+              points: [
+                "Real-time user activity dashboard",
+                "Event tracking SDK",
+                "Live session stream",
+                "Funnels & analytics basics",
+                "Up to 150k events per month",
+                "Feedback-driven feature development",
+                "Priority feature requests",
+              ],
               featured: true,
+              badge: "Limited early access",
             },
             {
-              name: "Scale",
-              price: "Roadmap",
-              desc: "For privacy-sensitive and self-hosting teams.",
-              points: ["Postgres migration", "SSO", "Self-hosting", "White-label embed"],
+              name: "Planned Pricing",
+              price: "Coming soon",
+              desc: "Pricing will scale with product growth",
+              cta: "Join waitlist →",
+              points: [
+                "Higher event limits",
+                "Advanced analytics",
+                "Team collaboration",
+                "Data export & integrations",
+                "Longer data retention",
+                "Priority support",
+              ],
               featured: false,
             },
           ].map((plan) => (
             <div
               key={plan.name}
-              className={`rounded-2xl border p-7 ${
+              className={`group relative rounded-2xl border p-7 transition-all ${
                 plan.featured
                   ? "border-[#23C9B9]/40 bg-[#0F1720]"
-                  : "border-white/5 bg-[#0B0F14]"
+                  : "border-white/5 bg-[#0B0F14] hover:border-[#23C9B9]/35 hover:shadow-[0_0_0_1px_rgba(35,201,185,0.18),0_0_36px_rgba(35,201,185,0.12)]"
               }`}
             >
+              {!plan.featured ? (
+                <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="absolute inset-0 rounded-2xl border border-[#23C9B9]/28 shadow-[0_0_18px_rgba(35,201,185,0.16),0_0_44px_rgba(35,201,185,0.1)]" />
+                  <div className="absolute right-6 top-6 h-16 w-16 rounded-full bg-[#23C9B9]/12 blur-2xl" />
+                  <div className="absolute inset-x-8 bottom-0 h-10 bg-[radial-gradient(circle_at_center,rgba(35,201,185,0.12),transparent_70%)] blur-xl" />
+                </div>
+              ) : null}
               <div className="mb-6 flex items-center justify-between">
                 <h3 className="text-xl font-medium text-white">{plan.name}</h3>
-                {plan.featured && (
+                {plan.badge && (
                   <span className="rounded-full border border-[#23C9B9]/30 bg-[#23C9B9]/10 px-3 py-1 text-xs font-medium text-[#7AF5E8]">
-                    Most likely next
+                    {plan.badge}
                   </span>
                 )}
               </div>
@@ -1034,6 +1056,22 @@ function PricingSection() {
                     <span>{point}</span>
                   </div>
                 ))}
+              </div>
+              {plan.note ? (
+                <p className="mt-6 text-sm text-[#6B7C80]">{plan.note}</p>
+              ) : null}
+              <div className="mt-6">
+                <a
+                  href="#waitlist"
+                  onClick={(event) => handleSectionLinkClick("waitlist", event)}
+                  className={`inline-flex w-full items-center justify-center rounded-2xl border px-5 py-4 text-base font-medium transition-all ${
+                    plan.featured
+                      ? "border-[#23C9B9]/30 bg-[linear-gradient(135deg,#23C9B9_0%,#1BA99C_42%,#12857D_100%)] text-[#04110F] hover:shadow-[0_18px_46px_rgba(35,201,185,0.22)]"
+                      : "border-white/10 bg-white/[0.02] text-[#E6F7F6] hover:border-white/20 hover:bg-white/[0.04]"
+                  }`}
+                >
+                  {plan.cta}
+                </a>
               </div>
             </div>
           ))}
