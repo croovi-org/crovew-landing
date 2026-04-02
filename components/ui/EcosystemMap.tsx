@@ -81,40 +81,6 @@ function StackLogo({ tone }: { tone: "flux" | "fx" }) {
   );
 }
 
-function CroovewEyeIcon() {
-  return (
-    <svg viewBox="0 0 18 18" className="h-[18px] w-[18px]" aria-hidden="true">
-      <ellipse
-        cx="9"
-        cy="9"
-        rx="7"
-        ry="4.5"
-        stroke="#23C9B9"
-        strokeWidth="1.4"
-      />
-      <circle cx="9" cy="9" r="2" fill="#23C9B9" opacity="0.9" />
-      <line
-        x1="5.5"
-        y1="5.5"
-        x2="7.5"
-        y2="7.5"
-        stroke="#23C9B9"
-        strokeWidth="1"
-        opacity="0.4"
-      />
-      <line
-        x1="12.5"
-        y1="5.5"
-        x2="10.5"
-        y2="7.5"
-        stroke="#23C9B9"
-        strokeWidth="1"
-        opacity="0.4"
-      />
-    </svg>
-  );
-}
-
 function EcosystemCard({
   badge,
   body,
@@ -351,7 +317,13 @@ export function EcosystemMap() {
               iconBgClassName="bg-[#071616]"
               labelClassName="text-[#23C9B9]"
               cardClassName="border-[#23C9B922] hover:border-[#23C9B945]"
-              logo={<CroovewEyeIcon />}
+              logo={
+                <img
+                  src={crovewLogo}
+                  alt="CroVew logo"
+                  className="h-5 w-5 object-contain"
+                />
+              }
             />
           </motion.div>
         </div>
