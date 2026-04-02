@@ -23,7 +23,6 @@ import {
   BarChart3,
   Users,
   KeyRound,
-  ArrowUpRight,
 } from "lucide-react";
 import { AnimatedWorldMap } from "@/components/map/WorldMap";
 import { GlobeScene, isWebGLAvailable } from "@/components/globe/GlobeScene";
