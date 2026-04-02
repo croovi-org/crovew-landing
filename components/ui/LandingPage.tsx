@@ -1238,9 +1238,9 @@ function CTASection() {
         </p>
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-5xl"
+          className="w-full max-w-[44rem]"
         >
-          <div className="relative overflow-hidden rounded-[34px] border border-white/12 bg-white/[0.035] p-2 shadow-[0_28px_120px_rgba(0,0,0,0.42),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl">
+          <div className="relative overflow-hidden rounded-[28px] border border-white/12 bg-white/[0.035] p-1.5 shadow-[0_28px_120px_rgba(0,0,0,0.42),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(35,201,185,0.12),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(122,245,232,0.08),transparent_25%)]" />
             <div className="relative flex flex-col gap-3 md:flex-row md:items-center">
               <label htmlFor="waitlist-email" className="sr-only">
@@ -1254,17 +1254,17 @@ function CTASection() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="Enter your work email"
-                className="h-[72px] w-full rounded-[26px] border border-white/0 bg-transparent px-6 text-lg text-white outline-none placeholder:text-[#8A959A] md:pr-[220px]"
+                className="h-[50px] w-full rounded-[20px] border border-white/0 bg-transparent px-5 text-[0.95rem] text-white outline-none placeholder:text-[#8A959A] md:pr-[166px]"
                 aria-describedby="waitlist-helper waitlist-feedback"
                 aria-invalid={feedback?.tone === "error" ? "true" : "false"}
               />
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="inline-flex h-[64px] items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,#23C9B9_0%,#1BA99C_42%,#12857D_100%)] px-7 text-lg font-semibold text-[#04110F] transition-all hover:scale-[1.01] hover:shadow-[0_18px_46px_rgba(35,201,185,0.32)] disabled:cursor-not-allowed disabled:opacity-70 md:absolute md:right-2 md:top-1/2 md:w-[210px] md:-translate-y-1/2"
+                className="inline-flex h-[44px] items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,#23C9B9_0%,#1BA99C_42%,#12857D_100%)] px-5 text-[0.95rem] font-semibold text-[#04110F] transition-all hover:scale-[1.01] hover:shadow-[0_18px_46px_rgba(35,201,185,0.32)] disabled:cursor-not-allowed disabled:opacity-70 md:absolute md:right-1.5 md:top-1/2 md:w-[154px] md:-translate-y-1/2"
               >
                 {isSubmitting ? "Joining..." : "Join Waitlist"}
-                <span className="ml-2 text-2xl leading-none" aria-hidden="true">
+                <span className="ml-1.5 text-lg leading-none" aria-hidden="true">
                   →
                 </span>
               </button>
