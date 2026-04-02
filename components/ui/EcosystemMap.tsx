@@ -3,14 +3,16 @@
 import { motion } from "framer-motion";
 
 const crooviSymbol = "/assets/croovi-symbol.png";
+const crovewLogo = "/assets/crovew-logo-cropped.png";
 
-type ProductCardProps = {
-  accent: string;
+type EcosystemCardProps = {
+  badge?: string;
   body: string;
-  delay: number;
+  cardClassName?: string;
   description: string;
-  glowColor?: string;
   href?: string;
+  iconBgClassName: string;
+  labelClassName: string;
   logo: React.ReactNode;
   title: string;
 };
@@ -21,10 +23,10 @@ function StackLogo({ tone }: { tone: "flux" | "fx" }) {
   const glow = tone === "flux" ? "#F2A7FF" : "#FFE08A";
 
   return (
-    <svg viewBox="0 0 96 84" className="h-14 w-16" aria-hidden="true">
+    <svg viewBox="0 0 96 84" className="h-[18px] w-[18px]" aria-hidden="true">
       <defs>
         <linearGradient
-          id={`stackGradient-${tone}`}
+          id={`ecosystemStackGradient-${tone}`}
           x1="8"
           y1="6"
           x2="82"
@@ -41,7 +43,7 @@ function StackLogo({ tone }: { tone: "flux" | "fx" }) {
         width="28"
         height="22"
         rx="6"
-        fill={`url(#stackGradient-${tone})`}
+        fill={`url(#ecosystemStackGradient-${tone})`}
       />
       <rect
         x="10"
@@ -49,7 +51,7 @@ function StackLogo({ tone }: { tone: "flux" | "fx" }) {
         width="24"
         height="20"
         rx="6"
-        fill={`url(#stackGradient-${tone})`}
+        fill={`url(#ecosystemStackGradient-${tone})`}
       />
       <rect
         x="36"
@@ -57,7 +59,7 @@ function StackLogo({ tone }: { tone: "flux" | "fx" }) {
         width="30"
         height="24"
         rx="6"
-        fill={`url(#stackGradient-${tone})`}
+        fill={`url(#ecosystemStackGradient-${tone})`}
       />
       <rect
         x="68"
@@ -65,7 +67,7 @@ function StackLogo({ tone }: { tone: "flux" | "fx" }) {
         width="18"
         height="18"
         rx="5"
-        fill={`url(#stackGradient-${tone})`}
+        fill={`url(#ecosystemStackGradient-${tone})`}
       />
       <rect
         x="28"
@@ -73,157 +75,166 @@ function StackLogo({ tone }: { tone: "flux" | "fx" }) {
         width="18"
         height="12"
         rx="5"
-        fill={`url(#stackGradient-${tone})`}
+        fill={`url(#ecosystemStackGradient-${tone})`}
       />
     </svg>
   );
 }
 
-function ProductCard({
-  accent,
-  body,
-  delay,
-  description,
-  glowColor,
-  href,
-  logo,
-  title,
-}: ProductCardProps) {
+function CroovewEyeIcon() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 28, scale: 0.98 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.4 }}
-      transition={{ duration: 0.75, delay, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ y: -6, scale: 1.015 }}
-      className="group relative overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl"
-      style={{
-        boxShadow:
-          "0 22px 80px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
-      }}
-    >
-      <div
-        className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${accent} opacity-[0.12] blur-2xl transition-opacity duration-500 group-hover:opacity-[0.22]`}
+    <svg viewBox="0 0 18 18" className="h-[18px] w-[18px]" aria-hidden="true">
+      <ellipse
+        cx="9"
+        cy="9"
+        rx="7"
+        ry="4.5"
+        stroke="#23C9B9"
+        strokeWidth="1.4"
       />
-      <div className="pointer-events-none absolute inset-[1px] rounded-[23px] border border-white/5" />
-      {glowColor ? (
-        <motion.div
-          className="pointer-events-none absolute inset-0 rounded-[24px]"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: [0, 1, 0.72] }}
-          viewport={{ once: true, amount: 0.55 }}
-          transition={{
-            duration: 0.75,
-            delay: delay + 0.62,
-            times: [0, 0.55, 1],
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          style={{
-            border: `1px solid ${glowColor}`,
-            boxShadow: `0 0 0 1px ${glowColor} inset, 0 0 22px ${glowColor}, 0 0 44px ${glowColor}33`,
-          }}
-        />
-      ) : null}
-      <div className="relative z-10 flex flex-col items-center text-center">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center">
-          {logo}
-        </div>
-        <h3 className="text-xl font-semibold tracking-tight text-white md:text-[1.35rem]">
-          {title}
-        </h3>
-        <p className="mt-1.5 text-[11px] font-medium uppercase tracking-[0.22em] text-[#E6F7F6]/68">
-          {description}
-        </p>
-        <p className="mt-3 max-w-[26ch] text-sm leading-6 text-[#9FB3B8]">
-          {body}
-        </p>
-        {href ? (
-          <a
-            href={href}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-4 inline-flex items-center rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-white transition-all hover:border-white/20 hover:bg-white/10"
-          >
-            Visit
-          </a>
-        ) : null}
-      </div>
-    </motion.div>
+      <circle cx="9" cy="9" r="2" fill="#23C9B9" opacity="0.9" />
+      <line
+        x1="5.5"
+        y1="5.5"
+        x2="7.5"
+        y2="7.5"
+        stroke="#23C9B9"
+        strokeWidth="1"
+        opacity="0.4"
+      />
+      <line
+        x1="12.5"
+        y1="5.5"
+        x2="10.5"
+        y2="7.5"
+        stroke="#23C9B9"
+        strokeWidth="1"
+        opacity="0.4"
+      />
+    </svg>
   );
 }
 
-function ConnectorLines() {
+function EcosystemCard({
+  badge,
+  body,
+  cardClassName,
+  description,
+  href,
+  iconBgClassName,
+  labelClassName,
+  logo,
+  title,
+}: EcosystemCardProps) {
+  return (
+    <div
+      className={`group relative flex h-full flex-col rounded-[14px] border border-[#151E30] bg-[#0B0F14] px-6 pb-6 pt-7 transition-all duration-200 hover:-translate-y-[2px] ${cardClassName ?? ""}`}
+    >
+      {badge ? (
+        <div className="absolute -top-[9px] right-4 rounded-full bg-[#23C9B9] px-[9px] py-[3px] text-[9px] font-bold uppercase tracking-[0.1em] text-[#041010]">
+          {badge}
+        </div>
+      ) : null}
+      <div
+        className={`mb-4 flex h-9 w-9 items-center justify-center rounded-[9px] ${iconBgClassName}`}
+      >
+        {logo}
+      </div>
+      <p
+        className={`mb-[5px] text-[10px] font-semibold uppercase tracking-[0.12em] ${labelClassName}`}
+      >
+        {description}
+      </p>
+      <p className="mb-[6px] text-[16px] font-[650] tracking-[-0.01em] text-[#DDE3F5]">
+        {title}
+      </p>
+      <p className="text-[12.5px] leading-[1.6] text-[#9FB3B8]">{body}</p>
+      {href ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-4 inline-flex items-center gap-[5px] rounded-[6px] border border-[#18253A] px-3 py-[5px] text-[11px] font-medium uppercase tracking-[0.05em] text-[#6B7C80] transition-colors duration-200 group-hover:border-[#23C9B935] group-hover:text-[#7AF5E8]"
+        >
+          Visit ↗
+        </a>
+      ) : null}
+    </div>
+  );
+}
+
+function ConnectorSvg() {
   return (
     <motion.svg
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, amount: 0.5 }}
-      transition={{ duration: 0.4, delay: 0.35 }}
-      viewBox="0 0 1000 520"
-      className="pointer-events-none absolute inset-x-0 top-[112px] hidden h-[430px] w-full md:block"
+      initial={{ opacity: 0, y: -4 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.55 }}
+      transition={{ duration: 0.5, delay: 0.18 }}
+      className="block w-full overflow-visible"
+      height="48"
+      viewBox="0 0 816 48"
       preserveAspectRatio="none"
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="ecosystemConnectorFlux" x1="40%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#A856FF" />
-          <stop offset="55%" stopColor="#D989FF" />
-          <stop offset="100%" stopColor="#F2A7FF" />
+        <linearGradient id="ecosystemLeft" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#23C9B9" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="#23C9B9" stopOpacity="0.12" />
         </linearGradient>
-        <linearGradient id="ecosystemConnectorFx" x1="60%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFB347" />
-          <stop offset="55%" stopColor="#FFD15C" />
-          <stop offset="100%" stopColor="#FF8A34" />
+        <linearGradient id="ecosystemMid" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#23C9B9" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="#23C9B9" stopOpacity="0.12" />
         </linearGradient>
-        <filter id="ecosystemGlowFlux">
-          <feGaussianBlur stdDeviation="5" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-        <filter id="ecosystemGlowFx">
-          <feGaussianBlur stdDeviation="5" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
+        <linearGradient id="ecosystemRight" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#23C9B9" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="#23C9B9" stopOpacity="0.12" />
+        </linearGradient>
       </defs>
 
-      <motion.path
-        d="M415 170 C382 230 318 308 242 414"
-        fill="none"
-        stroke="url(#ecosystemConnectorFlux)"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-        strokeDasharray="1 11"
-        filter="url(#ecosystemGlowFlux)"
-        initial={{ pathLength: 0, opacity: 0.16 }}
-        whileInView={{ pathLength: 1, opacity: 0.8 }}
-        viewport={{ once: true, amount: 0.45 }}
-        transition={{
-          duration: 1.02,
-          delay: 0.46,
-          ease: [0.16, 1, 0.3, 1],
-        }}
+      <circle cx="408" cy="2" r="2.5" fill="#23C9B9" opacity="0.5" />
+      <line
+        x1="408"
+        y1="2"
+        x2="408"
+        y2="24"
+        stroke="url(#ecosystemMid)"
+        strokeWidth="1.5"
       />
-      <motion.path
-        d="M585 170 C618 230 682 308 758 414"
-        fill="none"
-        stroke="url(#ecosystemConnectorFx)"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-        strokeDasharray="1 11"
-        filter="url(#ecosystemGlowFx)"
-        initial={{ pathLength: 0, opacity: 0.16 }}
-        whileInView={{ pathLength: 1, opacity: 0.8 }}
-        viewport={{ once: true, amount: 0.45 }}
-        transition={{
-          duration: 1.02,
-          delay: 0.62,
-          ease: [0.16, 1, 0.3, 1],
-        }}
+      <line
+        x1="136"
+        y1="24"
+        x2="680"
+        y2="24"
+        stroke="#23C9B9"
+        strokeOpacity="0.15"
+        strokeWidth="1"
+      />
+      <circle cx="136" cy="24" r="2" fill="#23C9B9" opacity="0.3" />
+      <circle cx="408" cy="24" r="2" fill="#23C9B9" opacity="0.3" />
+      <circle cx="680" cy="24" r="2" fill="#23C9B9" opacity="0.3" />
+      <line
+        x1="136"
+        y1="24"
+        x2="136"
+        y2="48"
+        stroke="url(#ecosystemLeft)"
+        strokeWidth="1.5"
+      />
+      <line
+        x1="408"
+        y1="24"
+        x2="408"
+        y2="48"
+        stroke="url(#ecosystemMid)"
+        strokeWidth="1.5"
+      />
+      <line
+        x1="680"
+        y1="24"
+        x2="680"
+        y2="48"
+        stroke="url(#ecosystemRight)"
+        strokeWidth="1.5"
       />
     </motion.svg>
   );
@@ -231,72 +242,118 @@ function ConnectorLines() {
 
 export function EcosystemMap() {
   return (
-    <section id="company" className="relative overflow-hidden border-t border-white/5 py-18 md:py-20">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(171,86,255,0.16),transparent_32%),radial-gradient(circle_at_20%_65%,rgba(86,228,255,0.08),transparent_26%),radial-gradient(circle_at_82%_66%,rgba(255,170,92,0.09),transparent_24%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(circle_at_center,#000_35%,transparent_92%)]" />
+    <section
+      id="company"
+      className="relative overflow-hidden border-t border-white/5 py-20 md:py-24"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(35,201,185,0.08),transparent_30%),radial-gradient(circle_at_20%_65%,rgba(86,228,255,0.05),transparent_24%),radial-gradient(circle_at_82%_66%,rgba(168,86,255,0.07),transparent_22%)]" />
+      <div className="pointer-events-none absolute left-1/2 top-0 h-px w-[500px] -translate-x-1/2 bg-[linear-gradient(90deg,transparent,rgba(35,201,185,0.1),transparent)]" />
 
-      <div className="relative mx-auto max-w-5xl px-6 lg:px-12">
+      <div className="relative mx-auto max-w-[880px] px-8">
         <motion.div
-          initial={{ opacity: 0, y: 28 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto max-w-4xl text-center"
+          viewport={{ once: true, amount: 0.45 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center"
         >
-          <p className="mb-4 text-xs font-medium uppercase tracking-[0.32em] text-[#7AF5E8]/70">
-            Ecosystem Architecture
+          <p className="mb-[14px] text-[11px] font-semibold uppercase tracking-[0.14em] text-[#23C9B9]">
+            Ecosystem
           </p>
-          <h2 className="mx-auto max-w-3xl text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-[3.2rem] lg:leading-[1.02]">
-            CroVew fits inside the Croovi execution stack
+          <h2 className="mb-[10px] text-[34px] font-bold leading-[1.2] tracking-[-0.02em] text-[#EEF2FF]">
+            Part of the Croovi suite
           </h2>
+          <p className="mx-auto mb-14 max-w-[380px] text-[14px] leading-[1.65] text-[#6B7C80]">
+            CroVew is one layer in a connected set of tools built for the way
+            solo founders actually work.
+          </p>
         </motion.div>
 
-        <div className="relative mt-8 md:mt-10">
-          <ConnectorLines />
-
-          <div className="mx-auto max-w-[320px] md:max-w-[340px]">
-            <ProductCard
+        <div className="mb-0 flex justify-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.45 }}
+            transition={{ duration: 0.65, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-[300px]"
+          >
+            <EcosystemCard
               title="Croovi"
-              description="Platform Layer"
-              body="The operating layer that holds planning, context, product direction, and decision flow together."
-              delay={0.12}
-              accent="from-fuchsia-400/50 via-violet-400/35 to-cyan-400/20"
+              description="Platform layer"
+              body="The operating layer. Planning, context, product direction, and decision flow."
+              iconBgClassName="bg-[#160F2A]"
+              labelClassName="text-[#7C72D8]"
+              cardClassName="border-[#151E30] hover:border-[#23C9B930]"
               logo={
                 <img
                   src={crooviSymbol}
                   alt="Croovi symbol"
-                  className="h-16 w-16 -translate-x-[7px] -translate-y-[1px] object-contain"
+                  className="h-5 w-5 object-contain"
                 />
               }
             />
-          </div>
+          </motion.div>
+        </div>
 
-          <div className="mt-6 grid justify-center gap-4 md:mt-10 md:grid-cols-2 md:gap-6">
-            <div className="mx-auto w-full max-w-[320px] md:max-w-[340px]">
-              <ProductCard
-                title="CroFlux"
-                description="Project & Execution"
-                body="Turns strategy into structured work through projects, tasks, ownership, and execution flow."
-                delay={0.52}
-                glowColor="#D989FF"
-                href="https://croflux.vercel.app/"
-                accent="from-fuchsia-300/45 via-violet-400/35 to-indigo-500/22"
-                logo={<StackLogo tone="flux" />}
-              />
-            </div>
-            <div className="mx-auto w-full max-w-[320px] md:max-w-[340px]">
-              <ProductCard
-                title="CrooFx"
-                description="AI Automation"
-                body="Automates repetitive development workflows so teams can move faster with less manual overhead."
-                delay={0.66}
-                glowColor="#FFBE4A"
-                href="https://www.croovi.com/"
-                accent="from-amber-300/42 via-orange-400/30 to-fuchsia-500/16"
-                logo={<StackLogo tone="fx" />}
-              />
-            </div>
-          </div>
+        <ConnectorSvg />
+
+        <div className="grid grid-cols-1 gap-[14px] md:grid-cols-3 md:items-stretch">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.6, delay: 0.16 }}
+            className="h-full"
+          >
+            <EcosystemCard
+              title="CroFlux"
+              description="Project & Execution"
+              body="Turns strategy into structured work. Projects, tasks, ownership, execution flow."
+              href="https://croflux.vercel.app/"
+              iconBgClassName="bg-[#160F2A]"
+              labelClassName="text-[#A78BFA]"
+              cardClassName="hover:border-[#A78BFA35]"
+              logo={<StackLogo tone="flux" />}
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.6, delay: 0.24 }}
+            className="h-full"
+          >
+            <EcosystemCard
+              title="CrooFx"
+              description="AI Automation"
+              body="Automates repetitive dev workflows so your team moves faster with less overhead."
+              href="https://www.croovi.com/"
+              iconBgClassName="bg-[#1C1405]"
+              labelClassName="text-[#F59E0B]"
+              cardClassName="hover:border-[#F59E0B35]"
+              logo={<StackLogo tone="fx" />}
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.6, delay: 0.32 }}
+            className="h-full"
+          >
+            <EcosystemCard
+              title="CroVew"
+              description="Visibility"
+              body="Real-time behavioral analytics. See who is live, what they are doing, and where they drop off."
+              badge="You are here"
+              iconBgClassName="bg-[#071616]"
+              labelClassName="text-[#23C9B9]"
+              cardClassName="border-[#23C9B922] hover:border-[#23C9B945]"
+              logo={<CroovewEyeIcon />}
+            />
+          </motion.div>
         </div>
       </div>
     </section>
