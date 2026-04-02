@@ -9,6 +9,7 @@ type EcosystemCardProps = {
   badge?: string;
   body: string;
   cardClassName?: string;
+  ctaClassName?: string;
   description: string;
   href?: string;
   labelClassName: string;
@@ -84,6 +85,7 @@ function EcosystemCard({
   badge,
   body,
   cardClassName,
+  ctaClassName,
   description,
   href,
   labelClassName,
@@ -118,7 +120,7 @@ function EcosystemCard({
           href={href}
           target="_blank"
           rel="noreferrer"
-          className="mx-auto mt-4 inline-flex items-center gap-[5px] rounded-[6px] border border-[#18253A] px-3 py-[5px] text-[11px] font-medium uppercase tracking-[0.05em] text-[#6B7C80] transition-colors duration-200 group-hover:border-[#23C9B935] group-hover:text-[#7AF5E8]"
+          className={`mx-auto mt-4 inline-flex items-center gap-[5px] rounded-[6px] border border-[#18253A] px-3 py-[5px] text-[11px] font-medium uppercase tracking-[0.05em] text-[#6B7C80] transition-colors duration-200 ${ctaClassName ?? "group-hover:border-[#23C9B935] group-hover:text-[#7AF5E8]"}`}
         >
           Visit ↗
         </a>
@@ -274,7 +276,8 @@ export function EcosystemMap() {
               body="Turns strategy into structured work. Projects, tasks, ownership, execution flow."
               href="https://croflux.vercel.app/"
               labelClassName="text-[#A78BFA]"
-              cardClassName="hover:border-[#A78BFA35]"
+              cardClassName="hover:border-[#7C3AED] hover:shadow-[0_0_0_1px_rgba(124,58,237,0.22),0_0_36px_rgba(124,58,237,0.22)]"
+              ctaClassName="group-hover:border-[#7C3AED] group-hover:text-[#A78BFA]"
               logo={<StackLogo tone="flux" />}
             />
           </motion.div>
@@ -292,7 +295,8 @@ export function EcosystemMap() {
               body="Automates repetitive dev workflows so your team moves faster with less overhead."
               href="https://www.croovi.com/"
               labelClassName="text-[#F59E0B]"
-              cardClassName="hover:border-[#F59E0B35]"
+              cardClassName="hover:border-[#A16207] hover:shadow-[0_0_0_1px_rgba(161,98,7,0.24),0_0_36px_rgba(161,98,7,0.2)]"
+              ctaClassName="group-hover:border-[#A16207] group-hover:text-[#D97706]"
               logo={<StackLogo tone="fx" />}
             />
           </motion.div>
@@ -310,7 +314,7 @@ export function EcosystemMap() {
               body="Real-time behavioral analytics. See who is live, what they are doing, and where they drop off."
               badge="You are here"
               labelClassName="text-[#23C9B9]"
-              cardClassName="border-[#23C9B922] hover:border-[#23C9B945]"
+              cardClassName="border-[#0F7F7822] hover:border-[#0F7F78] hover:shadow-[0_0_0_1px_rgba(15,127,120,0.22),0_0_36px_rgba(15,127,120,0.22)]"
               logo={
                 <img
                   src={crovewLogo}
