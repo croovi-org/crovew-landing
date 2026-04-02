@@ -103,10 +103,10 @@ export async function POST(request: Request) {
             <div style="border-top: 1px solid #153332; margin-top: 28px; padding-top: 22px;">
               <p style="color: #86a4a1; font-size: 13px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.08em;">Also building under Croovi</p>
               <p style="color: #b8d0cd; line-height: 1.8; margin: 0 0 8px;">
-                <strong style="color: #ffffff;">CroFlux</strong> — Turns strategy into structured execution through projects, tasks, ownership, and momentum.
+                <strong style="color: #ffffff;">CroFlux</strong>: Turns strategy into structured execution through projects, tasks, ownership, and momentum.
               </p>
               <p style="color: #b8d0cd; line-height: 1.8; margin: 0;">
-                <strong style="color: #ffffff;">CrooFx</strong> — AI automation for repetitive development workflows so teams can move faster with less manual overhead.
+                <strong style="color: #ffffff;">CrooFx</strong>: AI automation for repetitive development workflows so teams can move faster with less manual overhead.
               </p>
             </div>
             <p style="color: #72908d; margin-top: 28px; font-size: 13px; border-top: 1px solid #153332; padding-top: 16px;">

@@ -1118,11 +1118,11 @@ function RoadmapSection() {
             Roadmap
           </p>
           <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            What ships after the MVP earns real usage.
+            What comes after real usage begins
           </h2>
           <p className="text-lg text-[#9FB3B8]">
-            The product document already defines the sequence: signal first,
-            depth next, scale after that.
+            CroVew evolves based on real product signals, starting with
+            visibility, then deeper insights, then scale infrastructure.
           </p>
         </div>
 
@@ -1131,20 +1131,20 @@ function RoadmapSection() {
             {
               icon: Activity,
               phase: "Phase 2",
-              title: "Signal",
-              body: "Churn risk scoring, power-user detection, funnel analysis, property filtering, Slack alerts.",
+              title: "Signal Intelligence",
+              body: "Churn risk detection, power-user identification, funnel drop-off analysis, event property filtering, Slack alerts",
             },
             {
               icon: BarChart3,
               phase: "Phase 3",
-              title: "Depth",
-              body: "Feature adoption, privacy-safe session replay, A/B visibility, custom dashboards, CSV export, APIs.",
+              title: "Behavior Insights",
+              body: "Feature adoption tracking, privacy-safe session replay, cohort analysis, custom dashboards, CSV export & APIs",
             },
             {
               icon: Clock3,
               phase: "Phase 4",
-              title: "Scale",
-              body: "Postgres, self-hosting, npm SDK, SSO, team seats, white-label embed, usage-based billing.",
+              title: "Scale Infrastructure",
+              body: "Self-hosting option, SSO & access control, npm SDK, usage-based billing, white-label dashboards",
             },
           ].map((item) => (
             <div
