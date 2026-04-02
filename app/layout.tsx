@@ -6,10 +6,8 @@ export const metadata: Metadata = {
   title: "CroVew",
   description: "CroVew landing page",
   icons: {
-    icon: [
-      { url: "/crovew-favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
+    icon: [{ url: "/assets/crovew-logo-cropped.png", type: "image/png" }],
+    shortcut: ["/assets/crovew-logo-cropped.png"],
   },
 };
 
