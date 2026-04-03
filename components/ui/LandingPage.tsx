@@ -28,6 +28,7 @@ import { AnimatedWorldMap } from "@/components/map/WorldMap";
 import { GlobeScene, isWebGLAvailable } from "@/components/globe/GlobeScene";
 import { EyeCursor } from "@/components/ui/EyeCursor";
 import { EcosystemMap } from "@/components/ui/EcosystemMap";
+import { NavBar } from "@/components/ui/NavBar";
 
 const COLORS = {
   bg: "#05070A",
@@ -197,7 +198,12 @@ export function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, ease: "easeOut" }}
             >
-              <NavBar />
+              <NavBar
+                items={NAV_ITEMS}
+                logoSrc={crovewLogo}
+                shellClassName={HERO_SHELL}
+                onSectionClick={handleSectionLinkClick}
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -322,60 +328,6 @@ function IntroAnimation({ onComplete }: { onComplete: () => void }) {
         </motion.div>
       </div>
     </motion.div>
-  );
-}
-
-function NavBar() {
-  return (
-    <nav className="absolute inset-x-0 top-0 z-40 py-6">
-      <div
-        className={`mx-auto flex w-full items-center justify-between px-6 lg:px-12 ${HERO_SHELL}`}
-      >
-        <div className="flex items-center gap-2">
-          <div style={{ filter: "drop-shadow(0 0 8px rgba(35,201,185,0.5))" }}>
-            <img
-              src={crovewLogo}
-              alt="CroVew"
-              style={{ width: 68, height: "auto" }}
-            />
-          </div>
-          <span className="text-xl font-bold tracking-tight text-white">
-            CroVew
-          </span>
-        </div>
-        <div className="hidden items-center gap-8 md:flex">
-          {NAV_ITEMS.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              onClick={(event) =>
-                handleSectionLinkClick(item.href.replace("#", ""), event)
-              }
-              className="text-sm font-medium text-[#9FB3B8] transition-colors hover:text-white"
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-        <div className="flex items-center gap-4">
-          <a
-            href="#preview"
-            onClick={(event) => handleSectionLinkClick("preview", event)}
-            className="hidden text-sm font-medium text-[#E6F7F6] md:block hover:text-[#7AF5E8] transition-colors"
-          >
-            Live Preview
-          </a>
-          <a
-            href="#waitlist"
-            onClick={(event) => handleSectionLinkClick("waitlist", event)}
-            className="group relative overflow-hidden rounded-full bg-[#1BA99C] px-5 py-2 text-sm font-semibold text-black transition-all hover:scale-105 hover:bg-[#23C9B9]"
-          >
-            <span className="relative z-10">Get Early Access</span>
-            <div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite]" />
-          </a>
-        </div>
-      </div>
-    </nav>
   );
 }
 
