@@ -27,12 +27,7 @@ export function NavBar({
 
   useEffect(() => {
     const updateFloatingState = () => {
-      const hero = document.getElementById("hero");
-      const threshold = hero
-        ? Math.max(hero.offsetHeight - 80, 80)
-        : 80;
-
-      setIsFloating(window.scrollY > threshold);
+      setIsFloating(window.scrollY > 8);
     };
 
     updateFloatingState();
