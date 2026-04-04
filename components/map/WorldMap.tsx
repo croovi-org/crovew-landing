@@ -51,7 +51,9 @@ interface Dot {
 }
 
 interface AnimatedWorldMapProps {
-  interactive?: boolean;
+  className?: string;
+  dotRadius?: number;
+  strongGlow?: boolean;
   projectionScale?: number;
 }
 
@@ -73,7 +75,15 @@ function spawnDot(): Dot {
   };
 }
 
-function DotMarker({ dot }: { dot: Dot }) {
+function DotMarker({
+  dot,
+  dotRadius,
+  strongGlow,
+}: {
+  dot: Dot;
+  dotRadius: number;
+  strongGlow: boolean;
+}) {
   const tooltipWidth = Math.max(dot.label.length * 6.2 + 18, 80);
   const tooltipHeight = 22;
 
@@ -82,33 +92,35 @@ function DotMarker({ dot }: { dot: Dot }) {
       <g>
         {/* Outer ping rings */}
         <motion.circle
-          r={3}
+          r={dotRadius}
           fill="none"
           stroke="#7AF5E8"
           strokeWidth={0.8}
-          initial={{ r: 3, opacity: 0.7 }}
-          animate={{ r: 14, opacity: 0 }}
+          initial={{ r: dotRadius, opacity: 0.7 }}
+          animate={{ r: dotRadius + 11, opacity: 0 }}
           transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
         />
         <motion.circle
-          r={3}
+          r={dotRadius}
           fill="none"
           stroke="#23C9B9"
           strokeWidth={0.6}
-          initial={{ r: 3, opacity: 0.5 }}
-          animate={{ r: 9, opacity: 0 }}
+          initial={{ r: dotRadius, opacity: 0.5 }}
+          animate={{ r: dotRadius + 6, opacity: 0 }}
           transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut', delay: 0.4 }}
         />
 
         {/* Core dot */}
         <circle
-          r={3}
+          r={dotRadius}
           fill="#23C9B9"
           style={{
-            filter: 'drop-shadow(0 0 4px rgba(122,245,232,0.9)) drop-shadow(0 0 8px rgba(35,201,185,0.6))',
+            filter: strongGlow
+              ? 'drop-shadow(0 0 10px rgba(27,169,156,0.8)) drop-shadow(0 0 14px rgba(35,201,185,0.55))'
+              : 'drop-shadow(0 0 4px rgba(122,245,232,0.9)) drop-shadow(0 0 8px rgba(35,201,185,0.6))',
           }}
         />
-        <circle r={1.5} fill="#7AF5E8" />
+        <circle r={Math.max(1.5, dotRadius * 0.5)} fill="#7AF5E8" />
 
         {/* Tooltip rendered as SVG foreignObject */}
         {dot.showTooltip && (
@@ -147,24 +159,12 @@ function DotMarker({ dot }: { dot: Dot }) {
 }
 
 export function AnimatedWorldMap({
-  interactive = false,
+  className,
+  dotRadius = 3,
+  strongGlow = false,
   projectionScale = 185,
 }: AnimatedWorldMapProps) {
   const [dots, setDots] = useState<Dot[]>([]);
-  const [rotation, setRotation] = useState<[number, number, number]>([0, 0, 0]);
-  const [dragState, setDragState] = useState<{
-    dragging: boolean;
-    startX: number;
-    startY: number;
-    startRotX: number;
-    startRotY: number;
-  }>({
-    dragging: false,
-    startX: 0,
-    startY: 0,
-    startRotX: 0,
-    startRotY: 0,
-  });
   const filterId = useId().replace(/:/g, '');
 
   useEffect(() => {
@@ -195,48 +195,11 @@ export function AnimatedWorldMap({
     return () => clearTimeout(addTimeoutId);
   }, []);
 
-  useEffect(() => {
-    if (!interactive || !dragState.dragging) return;
-
-    const onMove = (event: MouseEvent) => {
-      const dx = event.clientX - dragState.startX;
-      const dy = event.clientY - dragState.startY;
-      const nextX = dragState.startRotX + dx * 0.28;
-      const nextY = Math.max(-40, Math.min(40, dragState.startRotY - dy * 0.2));
-      setRotation([nextX, nextY, 0]);
-    };
-
-    const onUp = () => {
-      setDragState((prev) => ({ ...prev, dragging: false }));
-    };
-
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-    return () => {
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseup', onUp);
-    };
-  }, [dragState, interactive]);
-
   return (
-    <div
-      className="relative h-full w-full overflow-hidden"
-      style={{ cursor: interactive ? (dragState.dragging ? 'grabbing' : 'grab') : 'default' }}
-      onMouseDown={(event) => {
-        if (!interactive) return;
-        event.preventDefault();
-        setDragState({
-          dragging: true,
-          startX: event.clientX,
-          startY: event.clientY,
-          startRotX: rotation[0],
-          startRotY: rotation[1],
-        });
-      }}
-    >
+    <div className={`relative h-full w-full overflow-hidden ${className ?? ''}`}>
       <ComposableMap
         projection="geoNaturalEarth1"
-        projectionConfig={{ scale: projectionScale, center: [15, 8], rotate: rotation }}
+        projectionConfig={{ scale: projectionScale, center: [15, 8] }}
         style={{ width: '100%', height: '100%', display: 'block' }}
       >
         <defs>
@@ -290,7 +253,12 @@ export function AnimatedWorldMap({
 
             {/* Animated event dots */}
             {dots.map(dot => (
-              <DotMarker key={dot.id} dot={dot} />
+              <DotMarker
+                key={dot.id}
+                dot={dot}
+                dotRadius={dotRadius}
+                strongGlow={strongGlow}
+              />
             ))}
           </g>
         </g>
