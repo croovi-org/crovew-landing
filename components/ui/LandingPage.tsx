@@ -16,7 +16,6 @@ import {
   ShieldCheck,
   Terminal,
   ChevronRight,
-  Zap,
   Play,
   Clock3,
   Shield,
@@ -28,6 +27,7 @@ import { AnimatedWorldMap } from "@/components/map/WorldMap";
 import { GlobeScene, isWebGLAvailable } from "@/components/globe/GlobeScene";
 import { EyeCursor } from "@/components/ui/EyeCursor";
 import { EcosystemMap } from "@/components/ui/EcosystemMap";
+import { LiveComponent } from "@/components/ui/LiveComponent";
 import { NavBar } from "@/components/ui/NavBar";
 
 const COLORS = {
@@ -43,68 +43,12 @@ const COLORS = {
   glow: "#7AF5E8",
 };
 
-const MOCK_EVENTS = [
-  {
-    id: 1,
-    user: "david_m",
-    action: "Upgraded to Pro",
-    time: "Just now",
-    icon: Zap,
-    color: "text-yellow-400",
-    bg: "bg-yellow-400/10",
-  },
-  {
-    id: 2,
-    user: "sarah.dev",
-    action: "Deployed API endpoint",
-    time: "12s ago",
-    icon: Code,
-    color: "text-primary1",
-    bg: "bg-[#23C9B9]/10",
-  },
-  {
-    id: 3,
-    user: "alex_99",
-    action: "Invited 3 team members",
-    time: "45s ago",
-    icon: MousePointerClick,
-    color: "text-blue-400",
-    bg: "bg-blue-400/10",
-  },
-  {
-    id: 4,
-    user: "jessica_t",
-    action: "Created new project",
-    time: "1m ago",
-    icon: Terminal,
-    color: "text-purple-400",
-    bg: "bg-purple-400/10",
-  },
-  {
-    id: 5,
-    user: "mike.w",
-    action: "Session started (Mobile)",
-    time: "2m ago",
-    icon: Activity,
-    color: "text-green-400",
-    bg: "bg-green-400/10",
-  },
-];
-
 const NAV_ITEMS = [
   { label: "Product", href: "#product" },
   { label: "Docs", href: "#docs" },
   { label: "Pricing", href: "#pricing" },
   { label: "Roadmap", href: "#roadmap" },
 ];
-
-const PREVIEW_BARS = [40, 20, 50, 80, 45, 60, 30, 90, 70, 85, 40, 65, 50].map(
-  (value, index) => ({
-    value,
-    peak: Math.max(12, Math.min(96, value + ((index % 5) - 2) * 5)),
-    duration: 2.4 + (index % 4) * 0.35,
-  }),
-);
 
 const HERO_SHELL = "max-w-[1360px]";
 const crovewLogo = "/assets/crovew-logo-cropped.png";
@@ -632,10 +576,10 @@ function FeaturesSection() {
 
 function PreviewSection() {
   return (
-    <section id="preview" className="relative py-24 overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-[#23C9B9]/5 blur-[150px] pointer-events-none" />
+    <section id="preview" className="relative overflow-hidden py-24">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-full -translate-x-1/2 -translate-y-1/2 bg-[#23C9B9]/5 blur-[150px]" />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-12 relative z-10">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -643,8 +587,7 @@ function PreviewSection() {
           transition={{ duration: 0.8 }}
           className="rounded-xl border border-white/10 bg-[#0B0F14]/80 p-2 shadow-2xl backdrop-blur-xl"
         >
-          {/* Mac window header */}
-          <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-[#0F1720]/50 rounded-t-lg">
+          <div className="flex items-center gap-2 rounded-t-lg border-b border-white/5 bg-[#0F1720]/50 px-4 py-3">
             <div className="flex gap-1.5">
               <div className="h-3 w-3 rounded-full bg-red-500/80" />
               <div className="h-3 w-3 rounded-full bg-yellow-500/80" />
@@ -655,102 +598,12 @@ function PreviewSection() {
             </div>
           </div>
 
-          {/* Dashboard body */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 p-4 lg:p-6 bg-black/20 rounded-b-lg min-h-[400px]">
-            {/* Sidebar / Stats */}
-            <div className="flex flex-col gap-4">
-              <div className="rounded-lg border border-white/5 bg-[#0B0F14] p-4">
-                <div className="text-xs text-[#6B7C80] mb-1">
-                  Active Users (Live)
-                </div>
-                <div className="text-4xl font-semibold text-white flex items-center gap-3">
-                  <motion.span
-                    animate={{ opacity: [1, 0.5, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    1,284
-                  </motion.span>
-                  <Activity className="h-5 w-5 text-[#23C9B9] animate-pulse" />
-                </div>
-              </div>
-              <div className="rounded-lg border border-white/5 bg-[#0B0F14] p-4 flex-1">
-                <div className="text-xs text-[#6B7C80] mb-4">Live Traffic</div>
-                <div className="flex items-end gap-1 h-32">
-                  {PREVIEW_BARS.map((bar, i) => (
-                      <motion.div
-                        key={i}
-                        className="w-full bg-[#23C9B9]/20 rounded-t-sm relative"
-                        style={{ height: `${bar.value}%` }}
-                        animate={{
-                          height: [
-                            `${bar.value}%`,
-                            `${bar.peak}%`,
-                            `${bar.value}%`,
-                          ],
-                        }}
-                        transition={{
-                          duration: bar.duration,
-                          repeat: Infinity,
-                        }}
-                      >
-                        <div className="absolute top-0 left-0 right-0 h-1 bg-[#23C9B9] rounded-t-sm" />
-                      </motion.div>
-                    ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Main Feed */}
-            <div className="lg:col-span-3 rounded-lg border border-white/5 bg-[#0B0F14] p-4 lg:p-6 overflow-hidden relative">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-sm font-medium text-white">
-                  Live Event Feed
-                </h3>
-                <div className="flex items-center gap-2 text-xs text-[#23C9B9]">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#23C9B9] opacity-75"></span>
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-[#23C9B9]"></span>
-                  </span>
-                  Receiving events...
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-3 relative z-10">
-                {MOCK_EVENTS.map((event, i) => (
-                  <motion.div
-                    key={event.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.2 }}
-                    className="flex items-center justify-between rounded-md border border-white/5 bg-[#0F1720]/50 p-3 hover:bg-[#0F1720]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`flex h-8 w-8 items-center justify-center rounded-md ${event.bg} ${event.color}`}
-                      >
-                        <event.icon className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium text-white">
-                          {event.action}
-                        </div>
-                        <div className="text-xs text-[#6B7C80]">
-                          {event.user}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-xs text-[#6B7C80] font-mono">
-                      {event.time}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Fade out bottom */}
-              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0B0F14] to-transparent z-20" />
-            </div>
-          </div>
+          <LiveComponent />
         </motion.div>
+
+        <p className="mt-2 text-center text-[11px] text-[#8b949e]">
+          Simulated preview of the CroVew signal layer
+        </p>
       </div>
     </section>
   );

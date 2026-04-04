@@ -50,6 +50,11 @@ interface Dot {
   showTooltip: boolean;
 }
 
+interface AnimatedWorldMapProps {
+  interactive?: boolean;
+  projectionScale?: number;
+}
+
 function spawnDot(): Dot {
   const totalWeight = DOT_REGIONS.reduce((s, r) => s + r[4], 0);
   let rand = Math.random() * totalWeight;
@@ -141,8 +146,25 @@ function DotMarker({ dot }: { dot: Dot }) {
   );
 }
 
-export function AnimatedWorldMap() {
+export function AnimatedWorldMap({
+  interactive = false,
+  projectionScale = 185,
+}: AnimatedWorldMapProps) {
   const [dots, setDots] = useState<Dot[]>([]);
+  const [rotation, setRotation] = useState<[number, number, number]>([0, 0, 0]);
+  const [dragState, setDragState] = useState<{
+    dragging: boolean;
+    startX: number;
+    startY: number;
+    startRotX: number;
+    startRotY: number;
+  }>({
+    dragging: false,
+    startX: 0,
+    startY: 0,
+    startRotX: 0,
+    startRotY: 0,
+  });
   const filterId = useId().replace(/:/g, '');
 
   useEffect(() => {
@@ -173,11 +195,48 @@ export function AnimatedWorldMap() {
     return () => clearTimeout(addTimeoutId);
   }, []);
 
+  useEffect(() => {
+    if (!interactive || !dragState.dragging) return;
+
+    const onMove = (event: MouseEvent) => {
+      const dx = event.clientX - dragState.startX;
+      const dy = event.clientY - dragState.startY;
+      const nextX = dragState.startRotX + dx * 0.28;
+      const nextY = Math.max(-40, Math.min(40, dragState.startRotY - dy * 0.2));
+      setRotation([nextX, nextY, 0]);
+    };
+
+    const onUp = () => {
+      setDragState((prev) => ({ ...prev, dragging: false }));
+    };
+
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+  }, [dragState, interactive]);
+
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    <div
+      className="relative h-full w-full overflow-hidden"
+      style={{ cursor: interactive ? (dragState.dragging ? 'grabbing' : 'grab') : 'default' }}
+      onMouseDown={(event) => {
+        if (!interactive) return;
+        event.preventDefault();
+        setDragState({
+          dragging: true,
+          startX: event.clientX,
+          startY: event.clientY,
+          startRotX: rotation[0],
+          startRotY: rotation[1],
+        });
+      }}
+    >
       <ComposableMap
         projection="geoNaturalEarth1"
-        projectionConfig={{ scale: 185, center: [15, 8] }}
+        projectionConfig={{ scale: projectionScale, center: [15, 8], rotate: rotation }}
         style={{ width: '100%', height: '100%', display: 'block' }}
       >
         <defs>
