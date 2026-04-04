@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { AnimatedWorldMap } from "@/components/map/WorldMap";
 
 type PreviewTab = "live" | "geo" | "flow" | "retention";
+const PREVIEW_TABS: PreviewTab[] = ["live", "geo", "flow", "retention"];
 
 type LiveEventTemplate = {
   t: string;
@@ -83,6 +84,7 @@ function Widget({ label, value, accent, children }: { label: string; value: stri
 
 export function LiveComponent() {
   const [activeTab, setActiveTab] = useState<PreviewTab>("live");
+  const [isHovered, setIsHovered] = useState(false);
 
   const [userCount, setUserCount] = useState(1284);
   const [eventsPerMinute, setEventsPerMinute] = useState(92);
@@ -202,8 +204,22 @@ export function LiveComponent() {
     setActiveTab(tab);
   };
 
+  useEffect(() => {
+    if (isHovered) return;
+
+    const interval = window.setInterval(() => {
+      setActiveTab((prev) => {
+        const currentIndex = PREVIEW_TABS.indexOf(prev);
+        const nextIndex = (currentIndex + 1) % PREVIEW_TABS.length;
+        return PREVIEW_TABS[nextIndex];
+      });
+    }, 2000);
+
+    return () => window.clearInterval(interval);
+  }, [isHovered, activeTab]);
+
   return (
-    <>
+    <div onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
       <div className="flex border-b border-[#1e2530] bg-[#161b22]">
         <button className={tabButtonClass("live")} onClick={() => changeTab("live")} type="button">
           Live Activity
@@ -252,10 +268,10 @@ export function LiveComponent() {
           {activeTab === "live" && (
             <motion.div
               key="tab-live"
-              initial={{ opacity: 0, y: 4 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 2 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className="grid min-h-[540px] max-h-[560px] grid-cols-[320px_1fr] items-center gap-6 p-4"
             >
               <div className="grid gap-3">
@@ -332,10 +348,10 @@ export function LiveComponent() {
           {activeTab === "geo" && (
             <motion.div
               key="tab-geo"
-              initial={{ opacity: 0, y: 4 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 2 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className="grid min-h-[540px] max-h-[560px] grid-cols-[320px_1fr] items-center gap-6 p-4"
             >
               <div className="grid gap-3 self-start pt-2">
@@ -432,10 +448,10 @@ export function LiveComponent() {
           {activeTab === "flow" && (
             <motion.div
               key="tab-flow"
-              initial={{ opacity: 0, y: 4 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 2 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className="grid min-h-[540px] max-h-[560px] grid-cols-[320px_1fr] items-stretch gap-6 overflow-hidden p-4"
             >
               <div className="grid gap-3 self-start">
@@ -517,10 +533,10 @@ export function LiveComponent() {
           {activeTab === "retention" && (
             <motion.div
               key="tab-retention"
-              initial={{ opacity: 0, y: 4 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 2 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className="grid min-h-[540px] max-h-[560px] grid-cols-[320px_1fr] items-center gap-6 p-4"
             >
               <div className="grid gap-3">
@@ -643,6 +659,6 @@ export function LiveComponent() {
           background: rgba(27, 217, 138, 0.65);
         }
       `}</style>
-    </>
+    </div>
   );
 }
