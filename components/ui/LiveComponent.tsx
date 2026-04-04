@@ -328,38 +328,53 @@ export function LiveComponent() {
                 </div>
               </div>
 
-              <div className="relative w-full h-[340px] flex items-center justify-center overflow-hidden [mask-image:radial-gradient(circle_at_center,white_60%,transparent_100%)] [-webkit-mask-image:radial-gradient(circle_at_center,white_60%,transparent_100%)]">
+              <div
+                className="relative w-full h-full overflow-hidden"
+                style={{
+                  maskImage: "radial-gradient(circle at center, white 55%, transparent 100%)",
+                  WebkitMaskImage: "radial-gradient(circle at center, white 55%, transparent 100%)",
+                  cursor: dragging ? "grabbing" : "grab",
+                  touchAction: "none",
+                }}
+                onPointerDown={(event) => {
+                  dragStartRef.current = { x: event.clientX, y: event.clientY, baseX: position.x, baseY: position.y };
+                  setDragging(true);
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                }}
+                onPointerMove={(event) => {
+                  if (!dragging) return;
+                  const dx = event.clientX - dragStartRef.current.x;
+                  const dy = event.clientY - dragStartRef.current.y;
+                  setPosition({ x: clamp(dragStartRef.current.baseX + dx, -40, 40), y: clamp(dragStartRef.current.baseY + dy, -25, 25) });
+                }}
+                onPointerUp={(event) => {
+                  setDragging(false);
+                  setPosition((prev) => ({ x: prev.x * 0.6, y: prev.y * 0.6 }));
+                  event.currentTarget.releasePointerCapture(event.pointerId);
+                }}
+                onPointerCancel={(event) => {
+                  setDragging(false);
+                  setPosition((prev) => ({ x: prev.x * 0.6, y: prev.y * 0.6 }));
+                  event.currentTarget.releasePointerCapture(event.pointerId);
+                }}
+              >
                 <div
-                  className="relative flex h-full w-[78%] items-center justify-center overflow-hidden"
+                  className="relative h-full w-full overflow-hidden"
                   style={{
-                    transform: `translate(${position.x}px, ${position.y - 8}px)`,
                     transition: dragging ? "transform 0.05s linear" : "transform 0.25s ease-out",
-                    cursor: dragging ? "grabbing" : "grab",
-                    touchAction: "none",
-                  }}
-                  onPointerDown={(event) => {
-                    dragStartRef.current = { x: event.clientX, y: event.clientY, baseX: position.x, baseY: position.y };
-                    setDragging(true);
-                    event.currentTarget.setPointerCapture(event.pointerId);
-                  }}
-                  onPointerMove={(event) => {
-                    if (!dragging) return;
-                    const dx = event.clientX - dragStartRef.current.x;
-                    const dy = event.clientY - dragStartRef.current.y;
-                    setPosition({ x: clamp(dragStartRef.current.baseX + dx, -40, 40), y: clamp(dragStartRef.current.baseY + dy, -25, 25) });
-                  }}
-                  onPointerUp={(event) => {
-                    setDragging(false);
-                    setPosition((prev) => ({ x: prev.x * 0.6, y: prev.y * 0.6 }));
-                    event.currentTarget.releasePointerCapture(event.pointerId);
-                  }}
-                  onPointerCancel={(event) => {
-                    setDragging(false);
-                    setPosition((prev) => ({ x: prev.x * 0.6, y: prev.y * 0.6 }));
-                    event.currentTarget.releasePointerCapture(event.pointerId);
                   }}
                 >
-                  <AnimatedWorldMap className="w-[140%] max-w-none" dotRadius={6} strongGlow projectionScale={205} />
+                  <AnimatedWorldMap
+                    className="absolute left-1/2 top-1/2 w-[160%] max-w-none opacity-90"
+                    dotRadius={6}
+                    strongGlow
+                    projectionScale={255}
+                    style={
+                      {
+                        transform: `translate(-50%, -50%) translate(${position.x}px, ${position.y}px) scale(1)`,
+                      } as React.CSSProperties
+                    }
+                  />
 
                   {[
                     { text: "3 users active", x: "24%", y: "33%" },

@@ -55,6 +55,7 @@ interface AnimatedWorldMapProps {
   dotRadius?: number;
   strongGlow?: boolean;
   projectionScale?: number;
+  style?: React.CSSProperties;
 }
 
 function spawnDot(): Dot {
@@ -163,6 +164,7 @@ export function AnimatedWorldMap({
   dotRadius = 3,
   strongGlow = false,
   projectionScale = 185,
+  style,
 }: AnimatedWorldMapProps) {
   const [dots, setDots] = useState<Dot[]>([]);
   const filterId = useId().replace(/:/g, '');
@@ -196,7 +198,7 @@ export function AnimatedWorldMap({
   }, []);
 
   return (
-    <div className={`relative h-full w-full overflow-hidden ${className ?? ''}`}>
+    <div className={`relative h-full w-full overflow-hidden ${className ?? ''}`} style={style}>
       <ComposableMap
         projection="geoNaturalEarth1"
         projectionConfig={{ scale: projectionScale, center: [15, 8] }}
