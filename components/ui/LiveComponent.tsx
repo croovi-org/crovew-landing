@@ -38,6 +38,8 @@ const RETENTION_MATRIX = [
   [86, 71, 58, 47, 39],
   [84, 69, 56, 46, 37],
 ];
+const RETENTION_DAYS = ["Day 0", "Day 1", "Day 3", "Day 7", "Day 14"];
+const RETENTION_COHORT_DATES = ["Apr 1", "Apr 2", "Apr 3", "Apr 4"];
 
 const FLOW_BASE = [100, 82, 61, 49];
 
@@ -91,16 +93,17 @@ export function LiveComponent() {
   const [tick, setTick] = useState(() => Date.now());
   const [newestEventId, setNewestEventId] = useState<number | null>(null);
 
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [dragging, setDragging] = useState(false);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
 
   const [flowWidths, setFlowWidths] = useState(FLOW_BASE);
   const [shimmerCol, setShimmerCol] = useState(0);
   const [geoLabelIdx, setGeoLabelIdx] = useState(0);
+  const [retentionPulse, setRetentionPulse] = useState(1);
 
   const eventIdxRef = useRef(events.length);
   const eventIdRef = useRef(events.length);
-  const dragStartRef = useRef({ x: 0, y: 0, baseX: 0, baseY: 0 });
+  const dragStart = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const interval = window.setInterval(() => setTick(Date.now()), 1000);
@@ -152,6 +155,16 @@ export function LiveComponent() {
   }, []);
 
   useEffect(() => {
+    let timeoutId: number;
+    const pulse = () => {
+      setRetentionPulse((prev) => (prev > 0.95 ? 0.93 : 1));
+      timeoutId = window.setTimeout(pulse, 4000 + Math.round(Math.random() * 2000));
+    };
+    timeoutId = window.setTimeout(pulse, 4500);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
     const interval = window.setInterval(() => {
       setGeoLabelIdx((prev) => (prev + 1) % 3);
     }, 2600);
@@ -173,8 +186,8 @@ export function LiveComponent() {
 
   const changeTab = (tab: PreviewTab) => {
     if (tab !== "geo") {
-      setDragging(false);
-      setPosition({ x: 0, y: 0 });
+      setIsDragging(false);
+      setOffset({ x: 0, y: 0 });
     }
     setActiveTab(tab);
   };
@@ -333,35 +346,47 @@ export function LiveComponent() {
                 style={{
                   maskImage: "radial-gradient(circle at center, white 55%, transparent 100%)",
                   WebkitMaskImage: "radial-gradient(circle at center, white 55%, transparent 100%)",
-                  cursor: dragging ? "grabbing" : "grab",
+                  cursor: isDragging ? "grabbing" : "grab",
                   touchAction: "none",
+                  userSelect: "none",
                 }}
                 onPointerDown={(event) => {
-                  dragStartRef.current = { x: event.clientX, y: event.clientY, baseX: position.x, baseY: position.y };
-                  setDragging(true);
+                  setIsDragging(true);
+                  dragStart.current = {
+                    x: event.clientX - offset.x,
+                    y: event.clientY - offset.y,
+                  };
                   event.currentTarget.setPointerCapture(event.pointerId);
                 }}
                 onPointerMove={(event) => {
-                  if (!dragging) return;
-                  const dx = event.clientX - dragStartRef.current.x;
-                  const dy = event.clientY - dragStartRef.current.y;
-                  setPosition({ x: clamp(dragStartRef.current.baseX + dx, -40, 40), y: clamp(dragStartRef.current.baseY + dy, -25, 25) });
+                  if (!isDragging) return;
+                  const newX = event.clientX - dragStart.current.x;
+                  const newY = event.clientY - dragStart.current.y;
+                  const clampX = Math.max(-120, Math.min(120, newX));
+                  const clampY = Math.max(-70, Math.min(70, newY));
+                  setOffset({ x: clampX, y: clampY });
                 }}
                 onPointerUp={(event) => {
-                  setDragging(false);
-                  setPosition((prev) => ({ x: prev.x * 0.6, y: prev.y * 0.6 }));
+                  setIsDragging(false);
+                  setOffset((prev) => ({ x: prev.x * 0.6, y: prev.y * 0.6 }));
                   event.currentTarget.releasePointerCapture(event.pointerId);
                 }}
                 onPointerCancel={(event) => {
-                  setDragging(false);
-                  setPosition((prev) => ({ x: prev.x * 0.6, y: prev.y * 0.6 }));
+                  setIsDragging(false);
+                  setOffset((prev) => ({ x: prev.x * 0.6, y: prev.y * 0.6 }));
+                  event.currentTarget.releasePointerCapture(event.pointerId);
+                }}
+                onPointerLeave={(event) => {
+                  if (!isDragging) return;
+                  setIsDragging(false);
+                  setOffset((prev) => ({ x: prev.x * 0.6, y: prev.y * 0.6 }));
                   event.currentTarget.releasePointerCapture(event.pointerId);
                 }}
               >
                 <div
                   className="relative h-full w-full overflow-hidden"
                   style={{
-                    transition: dragging ? "transform 0.05s linear" : "transform 0.25s ease-out",
+                    transition: isDragging ? "none" : "transform 0.35s ease-out",
                   }}
                 >
                   <AnimatedWorldMap
@@ -371,7 +396,7 @@ export function LiveComponent() {
                     projectionScale={255}
                     style={
                       {
-                        transform: `translate(-50%, -50%) translate(${position.x}px, ${position.y}px) scale(1)`,
+                        transform: `translate(-50%, -50%) translate(${offset.x}px, ${offset.y}px) scale(1)`,
                       } as React.CSSProperties
                     }
                   />
@@ -456,29 +481,74 @@ export function LiveComponent() {
                 <Widget label="Power users" value="9%" accent="#facc15" />
               </div>
 
-              <div className="rounded-lg border border-[#1e2530] bg-[#161b22] p-4">
-                <div className="mb-3 text-sm font-medium text-[#e6edf3]">Cohort heatmap</div>
-                <div className="grid grid-cols-5 gap-2">
-                  {RETENTION_MATRIX.flatMap((row, rowIdx) =>
-                    row.map((cell, colIdx) => {
-                      const highlighted = colIdx === shimmerCol;
-                      return (
-                        <div
-                          key={`${rowIdx}-${colIdx}`}
-                          className="h-14 rounded text-center text-[11px] font-medium leading-[56px] transition-all duration-300"
-                          style={{
-                            background: highlighted ? "rgba(27,217,138,0.88)" : `rgba(27,217,138,${(cell / 100) * 0.75 + 0.12})`,
-                            color: highlighted ? "#032210" : cell > 60 ? "#0a2a18" : "#8b949e",
-                            transform: highlighted ? "translateY(-1px)" : "translateY(0)",
-                          }}
-                        >
-                          {cell}%
-                        </div>
-                      );
-                    }),
-                  )}
+              <div className="flex h-full min-h-[500px] flex-col gap-4 rounded-lg border border-[#1e2530] bg-[#161b22] p-4">
+                <div className="flex items-end justify-between">
+                  <div>
+                    <div className="text-sm font-medium text-[#e6edf3]">Retention Cohorts</div>
+                    <div className="text-xs text-white/40">Last 14 days</div>
+                  </div>
+                  <div className="text-xs text-white/40">Grouped by daily cohorts</div>
                 </div>
-                <div className="mt-3 text-[11px] text-[#8b949e]">Retention stabilizing after day 3</div>
+
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <div className="rounded-md bg-[#0d1117]/70 px-3 py-1 text-white/70">Avg retention 42%</div>
+                  <div className="rounded-md bg-[#0d1117]/70 px-3 py-1 text-white/70">Best cohort 86%</div>
+                  <div className="rounded-md bg-[#0d1117]/70 px-3 py-1 text-white/70">Trend stable</div>
+                </div>
+
+                <div className="flex-1 space-y-2" style={{ opacity: retentionPulse, transition: "opacity 0.6s ease" }}>
+                  <div className="grid grid-cols-[72px_repeat(5,minmax(0,1fr))] gap-2 text-xs text-white/40">
+                    <div />
+                    {RETENTION_DAYS.map((day) => (
+                      <div key={day} className="text-center">
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="space-y-2">
+                    {RETENTION_MATRIX.map((row, rowIdx) => (
+                      <div key={RETENTION_COHORT_DATES[rowIdx]} className="grid grid-cols-[72px_repeat(5,minmax(0,1fr))] gap-2">
+                        <div className="flex items-center text-xs text-white/30">{RETENTION_COHORT_DATES[rowIdx]}</div>
+                        {row.map((cell, colIdx) => {
+                          const highlighted = colIdx === shimmerCol;
+                          return (
+                            <div
+                              key={`${rowIdx}-${colIdx}`}
+                              className="h-14 rounded text-center text-[11px] font-medium leading-[56px] transition-all duration-300"
+                              style={{
+                                background: highlighted ? "rgba(27,217,138,0.88)" : `rgba(27,217,138,${(cell / 100) * 0.75 + 0.12})`,
+                                color: highlighted ? "#032210" : cell > 60 ? "#0a2a18" : "#8b949e",
+                                transform: highlighted ? "translateY(-1px)" : "translateY(0)",
+                              }}
+                            >
+                              {cell}%
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <div className="h-2 w-full rounded bg-gradient-to-r from-[rgba(27,217,138,0.15)] to-[rgba(27,217,138,0.9)]" />
+                    <div className="flex justify-between text-xs text-white/40">
+                      <span>12%</span>
+                      <span>Low retention - High retention</span>
+                      <span>82%</span>
+                    </div>
+                  </div>
+
+                  <div className="rounded-md border border-[#1e2530] bg-[#0d1117]/65 px-3 py-2 text-xs text-white/60">
+                    <div className="mb-1 flex items-center gap-2 text-[#1bd98a]">
+                      <span className="h-2 w-2 rounded-full bg-[#1bd98a]" />
+                      Insight detected
+                    </div>
+                    <div>Retention stabilizes after day 3 for most cohorts</div>
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}
