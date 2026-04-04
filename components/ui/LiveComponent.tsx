@@ -42,6 +42,7 @@ const RETENTION_DAYS = ["Day 0", "Day 1", "Day 3", "Day 7", "Day 14"];
 const RETENTION_COHORT_DATES = ["Apr 1", "Apr 2", "Apr 3", "Apr 4"];
 
 const FLOW_BASE = [100, 82, 61, 49];
+const FLOW_STEP_TIMES = ["avg time 12s", "avg time 1m 22s", "avg time 48s", "avg time 2m 10s"];
 
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
@@ -175,6 +176,15 @@ export function LiveComponent() {
   const avgSessionText = `${Math.floor(avgSessionSec / 60)}m ${String(avgSessionSec % 60).padStart(2, "0")}s`;
 
   const visibleEvents = useMemo(() => events.slice(0, 6), [events]);
+  const flowSteps = useMemo(
+    () => [
+      { label: "Step 1 - Signup", width: flowWidths[0], color: "#1bd98a", time: FLOW_STEP_TIMES[0] },
+      { label: "Step 2 - Create project", width: flowWidths[1], color: "#1bd98a", time: FLOW_STEP_TIMES[1] },
+      { label: "Step 3 - Invite team", width: flowWidths[2], color: "#facc15", time: FLOW_STEP_TIMES[2] },
+      { label: "Step 4 - Activate feature", width: flowWidths[3], color: "#f0563a", time: FLOW_STEP_TIMES[3] },
+    ],
+    [flowWidths],
+  );
 
   const tabButtonClass = (tab: PreviewTab) =>
     [
@@ -426,40 +436,79 @@ export function LiveComponent() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 2 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className="grid min-h-[540px] max-h-[560px] grid-cols-[320px_1fr] items-center gap-6 p-4"
+              className="grid min-h-[540px] max-h-[560px] grid-cols-[320px_1fr] items-stretch gap-6 overflow-hidden p-4"
             >
-              <div className="grid gap-3">
-                <Widget label="Flow completion" value="68%" accent="#1bd98a" />
+              <div className="grid gap-3 self-start">
+                <Widget label="Flow completion" value="68%" accent="#1bd98a">
+                  <div className="mt-2 text-xs text-white/40">↑ 4% vs last week</div>
+                </Widget>
                 <Widget label="Biggest drop-off" value="Invite team step">
                   <div className="mt-2 text-[11px] text-[#f0563a]">-21% from previous step</div>
                 </Widget>
                 <Widget label="Avg steps / session" value="3.4" />
-                <Widget label="Repeat interaction" value="42%" accent="#a78bfa" />
+                <Widget label="Repeat interaction" value="42%" accent="#a78bfa">
+                  <div className="mt-2 text-xs text-white/40">stable vs last week</div>
+                </Widget>
               </div>
 
-              <div className="rounded-lg border border-[#1e2530] bg-[#161b22] p-4">
+              <div className="h-[500px] overflow-hidden rounded-lg border border-[#1e2530] bg-[#161b22]">
+                <div className="flow-scroll flex h-full flex-col overflow-y-scroll p-4">
+                <div className="mb-2 flex items-center justify-between text-xs text-white/40">
+                  <div className="flex items-center gap-2">
+                    <span>Onboarding Flow</span>
+                    <span>Last 7 days</span>
+                    <span>Based on 4,218 sessions</span>
+                  </div>
+                </div>
+                <div className="mb-3 flex items-center gap-2">
+                  <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-white/70">Segment: New users</span>
+                  <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-white/70">All traffic</span>
+                </div>
                 <div className="mb-4 text-sm font-medium text-[#e6edf3]">Behavior funnel</div>
-                <div className="space-y-4">
-                  {[
-                    { label: "Signup", width: flowWidths[0], color: "#1bd98a" },
-                    { label: "Create project", width: flowWidths[1], color: "#1bd98a" },
-                    { label: "Invite team", width: flowWidths[2], color: "#facc15" },
-                    { label: "Activate feature", width: flowWidths[3], color: "#f0563a" },
-                  ].map((step, idx) => (
-                    <div key={step.label} className="relative">
-                      <div className="mb-1 flex justify-between text-[11px] text-[#c9d1d9]">
-                        <span>{step.label}</span>
-                        <span>{Math.round(step.width)}%</span>
+
+                <div className="flex-1 space-y-5">
+                  {flowSteps.map((step, idx) => {
+                    const next = flowSteps[idx + 1];
+                    const currentPct = Math.round(step.width);
+                    const nextPct = next ? Math.round(next.width) : null;
+                    const drop = nextPct !== null ? Math.max(0, currentPct - nextPct) : null;
+                    return (
+                      <div key={step.label} className="relative">
+                        <div className="mb-1 flex items-start justify-between gap-3 text-[11px]">
+                          <div>
+                            <div className="text-[#c9d1d9]">{step.label}</div>
+                            <div className="mt-0.5 text-xs text-white/30">{step.time}</div>
+                          </div>
+                          <span className="text-[#c9d1d9]">{currentPct}%</span>
+                        </div>
+                        <div className="h-8 rounded bg-[#0d1117]">
+                          <div
+                            className="h-full rounded transition-[width] duration-[1400ms] ease-out"
+                            style={{ width: `${step.width}%`, background: step.color, opacity: 0.82 }}
+                          />
+                        </div>
+                        {next && (
+                          <div className="mt-2 flex items-center justify-between text-xs text-white/40">
+                            <span>
+                              {currentPct}% -&gt; {nextPct}%
+                            </span>
+                            <span>{`↓ ${drop}% drop`}</span>
+                          </div>
+                        )}
+                        {idx < flowSteps.length - 1 && <div className="mt-3 h-px w-full bg-white/20" />}
                       </div>
-                      <div className="h-7 rounded bg-[#0d1117]">
-                        <div
-                          className="h-full rounded transition-[width] duration-[1400ms] ease-out"
-                          style={{ width: `${step.width}%`, background: step.color, opacity: 0.82 }}
-                        />
-                      </div>
-                      {idx < 3 && <div className="mt-2 h-px w-full bg-[#1e2530]" />}
-                    </div>
-                  ))}
+                    );
+                  })}
+                </div>
+
+                <div className="mt-4 rounded-md border border-[#1e2530] bg-[#0d1117]/65 p-3 text-xs text-white/60">
+                  <div className="mb-1 flex items-center gap-2 text-[#1bd98a]">
+                    <span className="h-2 w-2 rounded-full bg-[#1bd98a]" />
+                    Insight detected
+                  </div>
+                  <div>Largest drop occurs at Invite Team step</div>
+                  <div className="mt-1 text-white/40">Users who skip inviting teammates show 37% lower retention.</div>
+                </div>
                 </div>
               </div>
             </motion.div>
@@ -574,6 +623,24 @@ export function LiveComponent() {
             opacity: 1;
             transform: translateY(0);
           }
+        }
+        .flow-scroll {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(27, 217, 138, 0.45) rgba(13, 17, 23, 0.6);
+        }
+        .flow-scroll::-webkit-scrollbar {
+          width: 8px;
+        }
+        .flow-scroll::-webkit-scrollbar-track {
+          background: rgba(13, 17, 23, 0.55);
+          border-radius: 999px;
+        }
+        .flow-scroll::-webkit-scrollbar-thumb {
+          background: rgba(27, 217, 138, 0.45);
+          border-radius: 999px;
+        }
+        .flow-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(27, 217, 138, 0.65);
         }
       `}</style>
     </>
