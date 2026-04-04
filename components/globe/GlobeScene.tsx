@@ -285,11 +285,11 @@ export function GlobeScene({
   }, []);
 
   const { globeScale, cameraZ, cameraFov } = useMemo(() => {
-    if (viewportWidth <= 375) {
-      return { globeScale: 0.52, cameraZ: 5.35, cameraFov: 60 };
+    if (viewportWidth <= 450) {
+      return { globeScale: 0.78, cameraZ: 4.45, cameraFov: 55 };
     }
     if (viewportWidth <= 550) {
-      return { globeScale: 0.6, cameraZ: 5.05, cameraFov: 58 };
+      return { globeScale: 0.72, cameraZ: 4.65, cameraFov: 56 };
     }
     if (viewportWidth <= 640) {
       return { globeScale: 0.68, cameraZ: 4.7, cameraFov: 56 };
