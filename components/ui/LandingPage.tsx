@@ -576,10 +576,10 @@ function FeaturesSection() {
 
 function PreviewSection() {
   return (
-    <section id="preview" className="relative overflow-hidden py-24">
+    <section id="preview" className="relative overflow-hidden py-16 md:py-20 xl:py-24">
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-full -translate-x-1/2 -translate-y-1/2 bg-[#23C9B9]/5 blur-[150px]" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12">
+      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-10">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
