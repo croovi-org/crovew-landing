@@ -174,10 +174,12 @@ function GlobeGroup({
   onHoverChange,
   onClick,
   transitioning,
+  scale,
 }: {
   onHoverChange: (v: boolean) => void;
   onClick: () => void;
   transitioning: boolean;
+  scale: number;
 }) {
   const groupRef = useRef<THREE.Group>(null!);
   const atmMat = useRef<THREE.MeshBasicMaterial>(null!);
@@ -229,7 +231,7 @@ function GlobeGroup({
   });
 
   return (
-    <group ref={groupRef} rotation={[0, Math.PI * 135 / 180, 0]}>
+    <group ref={groupRef} rotation={[0, Math.PI * 135 / 180, 0]} scale={scale}>
       <mesh
         onPointerEnter={() => { onHoverChange(true); hoveredRef.current = true; }}
         onPointerLeave={() => { onHoverChange(false); hoveredRef.current = false; }}
@@ -271,6 +273,35 @@ export function GlobeScene({
   className?: string;
 }) {
   const [hovered, setHovered] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(() =>
+    typeof window === "undefined" ? 1440 : window.innerWidth,
+  );
+
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const { globeScale, cameraZ, cameraFov } = useMemo(() => {
+    if (viewportWidth <= 375) {
+      return { globeScale: 0.52, cameraZ: 5.35, cameraFov: 60 };
+    }
+    if (viewportWidth <= 550) {
+      return { globeScale: 0.6, cameraZ: 5.05, cameraFov: 58 };
+    }
+    if (viewportWidth <= 640) {
+      return { globeScale: 0.68, cameraZ: 4.7, cameraFov: 56 };
+    }
+    if (viewportWidth <= 768) {
+      return { globeScale: 0.82, cameraZ: 4.2, cameraFov: 52 };
+    }
+    if (viewportWidth < 950) {
+      return { globeScale: 0.9, cameraZ: 3.9, cameraFov: 50 };
+    }
+    return { globeScale: 1, cameraZ: 3.6, cameraFov: 48 };
+  }, [viewportWidth]);
 
   return (
     <div
@@ -279,7 +310,7 @@ export function GlobeScene({
     >
       <CanvasErrorBoundary onError={onWebGLError ?? (() => {})}>
         <Canvas
-          camera={{ position: [0, 0, 3.6], fov: 48 }}
+          camera={{ position: [0, 0, cameraZ], fov: cameraFov }}
           gl={{ alpha: true, antialias: true }}
           dpr={[1, 2]}
           style={{ width: '100%', height: '100%', background: 'transparent', display: 'block' }}
@@ -289,6 +320,7 @@ export function GlobeScene({
             onHoverChange={setHovered}
             onClick={onClick}
             transitioning={transitioning}
+            scale={globeScale}
           />
         </Canvas>
       </CanvasErrorBoundary>
