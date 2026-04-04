@@ -665,16 +665,16 @@ function HowItWorksSection() {
 
 function DocsSection() {
   return (
-    <section id="docs" className="border-t border-white/5 py-24">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch lg:px-12">
-        <div className="flex h-full flex-col">
+    <section id="docs" className="border-t border-white/5 py-24 max-[550px]:py-16">
+      <div className="mx-auto grid grid-cols-1 max-w-7xl gap-10 px-6 max-[550px]:gap-8 max-[550px]:px-4 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch lg:px-12">
+        <div className="flex h-full min-w-0 flex-col">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-[#7AF5E8]/70">
             Quick Start
           </p>
-          <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+          <h2 className="mb-4 break-words text-3xl font-semibold tracking-tight text-white sm:text-4xl">
             Start capturing real user signals in under 5 minutes
           </h2>
-          <p className="max-w-2xl text-lg text-[#9FB3B8]">
+          <p className="max-w-2xl break-words text-lg text-[#9FB3B8]">
             Integrate in minutes, capture meaningful product signals instantly,
             and stay fully in control of what gets tracked.
           </p>
@@ -682,7 +682,7 @@ function DocsSection() {
           <p className="mt-8 mb-4 text-[11px] font-medium uppercase tracking-[0.24em] text-[#7AF5E8]/60">
             What you get instantly
           </p>
-          <div className="mt-8 grid flex-1 auto-rows-fr gap-4 sm:grid-cols-2">
+          <div className="mt-8 grid flex-1 auto-rows-fr gap-4 max-[550px]:gap-3 sm:grid-cols-2">
             {[
               {
                 icon: Code,
@@ -707,13 +707,13 @@ function DocsSection() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="h-full rounded-2xl border border-white/5 bg-[#0B0F14] p-5"
+                className="h-full rounded-2xl border border-white/5 bg-[#0B0F14] p-5 max-[550px]:p-4"
               >
-                <item.icon className="mb-4 h-5 w-5 text-[#23C9B9]" />
-                <h3 className="mb-2 text-base font-medium text-white">
+                <item.icon className="mb-4 h-5 w-5 text-[#23C9B9] max-[550px]:mb-3 max-[550px]:h-4 max-[550px]:w-4" />
+                <h3 className="mb-2 text-base font-medium text-white max-[550px]:text-[1.05rem]">
                   {item.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-[#9FB3B8]">
+                <p className="text-sm leading-relaxed text-[#9FB3B8] max-[550px]:text-[0.95rem] max-[550px]:leading-[1.45] break-words">
                   {item.body}
                 </p>
               </div>
@@ -721,13 +721,13 @@ function DocsSection() {
           </div>
         </div>
 
-        <div className="h-full rounded-2xl border border-white/10 bg-[#0B0F14]/90 p-6 shadow-2xl">
+        <div className="h-full min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-[#0B0F14]/90 p-6 max-[550px]:p-4 shadow-2xl">
           <div className="mb-4 flex items-center justify-between">
             <span className="text-sm font-medium text-white">
               Install snippet
             </span>
           </div>
-          <pre className="overflow-x-auto rounded-xl border border-white/5 bg-black/30 p-4 text-sm leading-7 text-[#E6F7F6]">
+          <pre className="w-full max-w-full overflow-x-auto rounded-xl border border-white/5 bg-black/30 p-4 text-sm leading-7 text-[#E6F7F6]">
             <code>{`<script src="https://cdn.crovew.com/sdk.js"></script>
 <script>
   CroVew.init({
