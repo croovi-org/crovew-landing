@@ -268,7 +268,7 @@ export function EcosystemMap() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}
             transition={{ duration: 0.6, delay: 0.16 }}
-            className="h-full"
+            className="mx-auto h-full w-full max-w-[390px] md:mx-0 md:max-w-none"
           >
             <EcosystemCard
               title="CroFlux"
@@ -287,7 +287,7 @@ export function EcosystemMap() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}
             transition={{ duration: 0.6, delay: 0.24 }}
-            className="h-full"
+            className="mx-auto h-full w-full max-w-[390px] md:mx-0 md:max-w-none"
           >
             <EcosystemCard
               title="CrooFx"
@@ -306,7 +306,7 @@ export function EcosystemMap() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}
             transition={{ duration: 0.6, delay: 0.32 }}
-            className="h-full"
+            className="mx-auto h-full w-full max-w-[390px] md:mx-0 md:max-w-none"
           >
             <EcosystemCard
               title="CroVew"
