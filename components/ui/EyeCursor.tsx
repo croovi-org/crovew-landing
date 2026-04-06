@@ -2,6 +2,7 @@
 
 import { motion, useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { CursorTrail } from "@/components/ui/CursorTrail";
 
 const EYE_SIZE = 32;
 const HALF_EYE = EYE_SIZE / 2;
@@ -184,35 +185,39 @@ export function EyeCursor() {
   }, [reducedMotion, visible, x, y]);
 
   return (
-    <motion.div
-      aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 z-[9999]"
-      style={{
-        x,
-        y,
-        opacity: visible ? 1 : 0,
-      }}
-    >
-      <motion.img
-        src={eyeLogo}
-        alt=""
-        className="h-8 w-8 select-none object-contain"
-        draggable={false}
-        animate={isIdle && !reducedMotion ? { rotate: 360 } : { rotate: 0 }}
-        transition={
-          isIdle && !reducedMotion
-            ? {
-                duration: ORBIT_DURATION_MS / 1000,
-                ease: "linear",
-                repeat: Infinity,
-              }
-            : { duration: 0.4, ease: "easeOut" }
-        }
+    <>
+      <CursorTrail x={x} y={y} visible={visible} reducedMotion={reducedMotion} />
+
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none fixed left-0 top-0 z-[9999]"
         style={{
-          filter:
-            "drop-shadow(0 0 14px rgba(35,201,185,0.5)) drop-shadow(0 0 24px rgba(122,245,232,0.28))",
+          x,
+          y,
+          opacity: visible ? 1 : 0,
         }}
-      />
-    </motion.div>
+      >
+        <motion.img
+          src={eyeLogo}
+          alt=""
+          className="h-8 w-8 select-none object-contain"
+          draggable={false}
+          animate={isIdle && !reducedMotion ? { rotate: 360 } : { rotate: 0 }}
+          transition={
+            isIdle && !reducedMotion
+              ? {
+                  duration: ORBIT_DURATION_MS / 1000,
+                  ease: "linear",
+                  repeat: Infinity,
+                }
+              : { duration: 0.4, ease: "easeOut" }
+          }
+          style={{
+            filter:
+              "drop-shadow(0 0 14px rgba(35,201,185,0.5)) drop-shadow(0 0 24px rgba(122,245,232,0.28))",
+          }}
+        />
+      </motion.div>
+    </>
   );
 }
