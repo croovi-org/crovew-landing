@@ -101,16 +101,20 @@ export async function POST(request: Request) {
               We're actively shaping the MVP now, and you'll be among the first to get access when invites go out.
             </p>
             <div style="border-top: 1px solid #153332; margin-top: 28px; padding-top: 22px;">
-              <p style="color: #86a4a1; font-size: 13px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.08em;">Also building under Croovi</p>
+              <p style="color: #86a4a1; font-size: 13px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.08em;">
+                Also building under Croovi.
+              </p>
               <p style="color: #b8d0cd; line-height: 1.8; margin: 0 0 8px;">
                 <strong style="color: #ffffff;">CroFlux</strong>: Turns strategy into structured execution through projects, tasks, ownership, and momentum.
+                <a href="https://croflux.vercel.app/" style="color: #2fe282; text-decoration: underline; margin-left: 6px;">&#8594; Join the waitlist</a>
               </p>
               <p style="color: #b8d0cd; line-height: 1.8; margin: 0;">
                 <strong style="color: #ffffff;">CrooFx</strong>: AI automation for repetitive development workflows so teams can move faster with less manual overhead.
+                <a href="https://croovi.com/" style="color: #2fe282; text-decoration: underline; margin-left: 6px;">&#8594; Join the waitlist</a>
               </p>
             </div>
             <p style="color: #72908d; margin-top: 28px; font-size: 13px; border-top: 1px solid #153332; padding-top: 16px;">
-              Ashish Khanagwal, Founder at Croovi
+              <a href="https://x.com/TheAshrex" style="color: #b8d0cd; text-decoration: none;">Ashish Khanagwal</a>, Founder at Croovi
             </p>
           </div>
         `,
